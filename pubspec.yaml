@@ -1,0 +1,36 @@
+name: ukalab_g_kentei
+description: "うかラボ G検定 - JDLA G検定（ジェネラリスト検定）対策アプリ。JDLAとは無関係の非公式アプリ。"
+publish_to: 'none'
+version: 0.1.0
+
+environment:
+  sdk: ^3.9.2
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # うかラボ共通基盤（タグ固定。main は参照しない）
+  app_common_kit:
+    git:
+      url: https://github.com/zka32101/app_common_kit.git
+      ref: v0.2.0
+  yourwish_kentei:
+    git:
+      url: https://github.com/zka32101/yourwish_kentei.git
+      ref: v0.2.0
+
+  # 状態管理
+  flutter_riverpod: ">=2.5.1 <3.0.0"
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/exam/
+    - assets/questions/
+    - assets/terms/
