@@ -1,0 +1,27 @@
+{
+  "examId": "g_kentei",
+  "name": "G検定（JDLA Deep Learning for GENERAL）",
+  "audience": "adult",
+  "subjects": [
+    { "subjectId": "ai_intro", "name": "人工知能とは", "order": 1 },
+    { "subjectId": "ai_trend", "name": "人工知能をめぐる動向", "order": 2 },
+    { "subjectId": "ml_overview", "name": "機械学習の概要", "order": 3 },
+    { "subjectId": "dl_overview", "name": "ディープラーニングの概要", "order": 4 },
+    { "subjectId": "dl_elements", "name": "ディープラーニングの要素技術", "order": 5 },
+    { "subjectId": "dl_applications", "name": "ディープラーニングの応用例", "order": 6 },
+    { "subjectId": "ai_social", "name": "AIの社会実装に向けて", "order": 7 },
+    { "subjectId": "math_stats", "name": "AIに必要な数理・統計知識", "order": 8 },
+    { "subjectId": "ai_law", "name": "AIに関する法律と契約", "order": 9 },
+    { "subjectId": "ai_ethics", "name": "AI倫理・AIガバナンス", "order": 10 }
+  ],
+  "levels": [
+    {
+      "levelId": "standard",
+      "name": "G検定",
+      "questionCount": 145,
+      "timeLimitSec": 6000,
+      "passRule": { "totalPct": 70 }
+    }
+  ],
+  "examDates": []
+}
