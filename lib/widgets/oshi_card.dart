@@ -5,18 +5,33 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../data/progress_store.dart';
 
-/// 習得度から推しの成長段階を決める。網羅率＝解いた問題の種類数÷全問題数、
-/// 正答率＝qidごとの最新の正誤に基づく正答率。
+/// 網羅率＝解いた問題の種類数÷全問題数、正答率＝qidごとの最新の正誤に基づく
+/// 正答率から習得度の入力を作る。`ReadinessRule.isReady` にそのまま渡せる。
+MasteryInput masteryInputFor({
+  required int distinctAnswered,
+  required int totalQuestions,
+  required int correct,
+}) {
+  if (totalQuestions <= 0 || distinctAnswered <= 0) {
+    return const MasteryInput(coverage: 0, accuracy: 0);
+  }
+  final coverage = (distinctAnswered / totalQuestions).clamp(0.0, 1.0);
+  final accuracy = (correct / distinctAnswered).clamp(0.0, 1.0);
+  return MasteryInput(coverage: coverage, accuracy: accuracy);
+}
+
+/// 習得度から推しの成長段階を決める。
 MascotStage oshiStageFor({
   required int distinctAnswered,
   required int totalQuestions,
   required int correct,
 }) {
-  if (totalQuestions <= 0 || distinctAnswered <= 0) return MascotStage.lv1;
-  final coverage = (distinctAnswered / totalQuestions).clamp(0.0, 1.0);
-  final accuracy = (correct / distinctAnswered).clamp(0.0, 1.0);
-  return MasteryModel.standard
-      .stageOf(MasteryInput(coverage: coverage, accuracy: accuracy));
+  final mastery = masteryInputFor(
+    distinctAnswered: distinctAnswered,
+    totalQuestions: totalQuestions,
+    correct: correct,
+  );
+  return MasteryModel.standard.stageOf(mastery);
 }
 
 const _kDisplayKey = 'ukalab_g_kentei_oshi_display';
@@ -74,6 +89,12 @@ class _OshiCardState extends ConsumerState<OshiCard> {
     final coin = ref.watch(coinProvider);
     final now = DateTime.now();
     final examPhase = MascotDayState(examDate: widget.examDate).examPhase(now);
+    final progress = ref.watch(progressProvider);
+    final stage = oshiStageFor(
+      distinctAnswered: progress.distinctAnswered,
+      totalQuestions: widget.totalQuestions,
+      correct: progress.correctCount,
+    );
     // PopupMenuButton は showMenu の戻り値が null だと「キャンセル」と区別できず
     // onSelected を呼ばないため、value は null にできない。文字列で表す。
     final menu = PopupMenuButton<String>(
@@ -86,11 +107,16 @@ class _OshiCardState extends ConsumerState<OshiCard> {
           ));
           return;
         }
+        if (v == 'passReport') {
+          showPassReportDialog(context, ref, cert: UkalabCert.gKentei, stage: stage);
+          return;
+        }
         final d = MascotDisplay.values.firstWhere((e) => e.name == v);
         ref.read(oshiDisplayProvider.notifier).set(d);
       },
       itemBuilder: (_) => const [
         PopupMenuItem(value: 'wardrobe', child: Text('着替え・ショップ')),
+        PopupMenuItem(value: 'passReport', child: Text('合格報告')),
         PopupMenuItem(value: 'normal', child: Text('通常')),
         PopupMenuItem(value: 'small', child: Text('小さく表示')),
         PopupMenuItem(value: 'hidden', child: Text('表示しない')),
@@ -107,12 +133,6 @@ class _OshiCardState extends ConsumerState<OshiCard> {
       );
     }
 
-    final progress = ref.watch(progressProvider);
-    final stage = oshiStageFor(
-      distinctAnswered: progress.distinctAnswered,
-      totalQuestions: widget.totalQuestions,
-      correct: progress.correctCount,
-    );
     // 連続学習日数・最終学習日は後続（間隔反復・学習記録）で対応するため、
     // 現時点では常に「未設定」として扱う。
     final day = MascotDayState(examDate: widget.examDate);
