@@ -4,6 +4,7 @@ import 'package:yourwish_kentei/yourwish_kentei.dart';
 import '../widgets/oshi_card.dart';
 import 'boundary_screen.dart';
 import 'predict_run_screen.dart';
+import 'route_planner_screen.dart';
 import 'teach_mascot_screen.dart';
 import 'terms_screen.dart';
 
@@ -12,7 +13,7 @@ class HomeScreen extends StatelessWidget {
   const HomeScreen({
     super.key,
     required this.exam,
-    required this.questionCount,
+    required this.questions,
     required this.terms,
     required this.boundaryScenarios,
     required this.predictRunScenarios,
@@ -20,7 +21,7 @@ class HomeScreen extends StatelessWidget {
   });
 
   final ExamConfig exam;
-  final int questionCount;
+  final List<Question> questions;
   final List<Term> terms;
   final List<BoundaryScenario> boundaryScenarios;
   final List<PredictRunScenario> predictRunScenarios;
@@ -42,7 +43,7 @@ class HomeScreen extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           OshiCard(
-            totalQuestions: questionCount,
+            totalQuestions: questions.length,
             examDate: exam.examDates.isEmpty ? null : exam.examDates.first,
           ),
           const SizedBox(height: 16),
@@ -54,7 +55,7 @@ class HomeScreen extends StatelessWidget {
                 children: [
                   Text('収録問題数', style: theme.textTheme.labelMedium),
                   const SizedBox(height: 4),
-                  Text('$questionCount問', style: theme.textTheme.titleMedium),
+                  Text('${questions.length}問', style: theme.textTheme.titleMedium),
                   const SizedBox(height: 12),
                   Text(
                     '「学ぶ」タブで分野別に演習、「模擬」タブで本番形式の採点ができます。',
@@ -138,6 +139,24 @@ class HomeScreen extends StatelessWidget {
               ),
             ),
           ],
+          const SizedBox(height: 16),
+          Card(
+            child: ListTile(
+              leading: const Icon(Icons.route_outlined),
+              title: const Text('最短ルートプランナー'),
+              subtitle: const Text('残り日数・弱点から「今日やる3つ」を出します。'),
+              trailing: const Icon(Icons.chevron_right),
+              onTap: () => Navigator.of(context).push(
+                MaterialPageRoute<void>(
+                  builder: (context) => RoutePlannerScreen(
+                    exam: exam,
+                    level: exam.levels.first,
+                    questions: questions,
+                  ),
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );

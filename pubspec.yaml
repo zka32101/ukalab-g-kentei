@@ -15,7 +15,7 @@ dependencies:
   app_common_kit:
     git:
       url: https://github.com/zka32101/app_common_kit.git
-      ref: 15f267f8525aca8f0042d19e5a0048bbf9365d87 # v0.6.0: TeachMascotWidget
+      ref: db0b4f5ee23eb25cb1d5fcf6f0c5d0d7bbac66b3 # v0.7.0: RoutePlannerWidget
   yourwish_kentei:
     git:
       url: https://github.com/zka32101/yourwish_kentei.git
