@@ -71,7 +71,7 @@ class _RootPage extends ConsumerWidget {
           pages: [
             HomeScreen(
               exam: data.exam,
-              questionCount: questions.length,
+              questions: questions,
               terms: data.terms,
               boundaryScenarios: data.boundaryScenarios,
               predictRunScenarios: data.predictRunScenarios,

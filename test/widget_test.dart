@@ -125,4 +125,20 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('わかった!'), findsOneWidget);
   });
+
+  testWidgets('最短ルートプランナーを開くと今日やる3つが出る', (tester) async {
+    await tester.runAsync(() async {
+      await tester.pumpWidget(_app());
+      await Future.delayed(const Duration(milliseconds: 300));
+    });
+    await tester.pumpAndSettle();
+
+    await tester.ensureVisible(find.text('最短ルートプランナー'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('最短ルートプランナー'));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(RoutePlannerWidget), findsOneWidget);
+    expect(find.text('今日やる3つ'), findsOneWidget);
+  });
 }
