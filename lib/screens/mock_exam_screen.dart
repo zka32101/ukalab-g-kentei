@@ -1,21 +1,27 @@
 import 'package:app_common_kit/app_common_kit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:yourwish_kentei/yourwish_kentei.dart';
+
+import '../data/progress_store.dart';
+import '../widgets/oshi_card.dart';
 
 /// 「模擬」タブ: 本試験相当の採点（合格ラインの目安は非公開のため70%を目安と明記）。
 ///
 /// 問題データが145問に満たない間は、今あるぶんだけで模擬試験として出題する。
-class MockExamScreen extends StatefulWidget {
+/// 実施でコイン+10、合格で+50(資格ごとに最初の1回のみ)が付与される
+/// （決定67〜77）。合格すると、習得度と合わせて「準備完了」の判定も行う。
+class MockExamScreen extends ConsumerStatefulWidget {
   const MockExamScreen({super.key, required this.exam, required this.questions});
 
   final ExamConfig exam;
   final List<Question> questions;
 
   @override
-  State<MockExamScreen> createState() => _MockExamScreenState();
+  ConsumerState<MockExamScreen> createState() => _MockExamScreenState();
 }
 
-class _MockExamScreenState extends State<MockExamScreen> {
+class _MockExamScreenState extends ConsumerState<MockExamScreen> {
   bool _started = false;
   int _index = 0;
   final Map<String, int?> _answers = {};
@@ -39,14 +45,32 @@ class _MockExamScreenState extends State<MockExamScreen> {
     setState(() => _answers[_picked[_index].qid] = i);
   }
 
+  Future<void> _finish() async {
+    final rule = widget.exam.levels.first.passRule;
+    final result = scoreMockExam(questions: _picked, answers: _answers, rule: rule);
+    setState(() => _result = result);
+
+    await ref.read(coinProvider.notifier).grant(CoinEvent.mockDone());
+    if (!result.passed) return;
+    await ref.read(coinProvider.notifier).grant(CoinEvent.mockPass(widget.exam.examId));
+    await ref.read(progressProvider.notifier).recordMockResult(passed: true);
+
+    final progress = ref.read(progressProvider);
+    final mastery = masteryInputFor(
+      distinctAnswered: progress.distinctAnswered,
+      totalQuestions: widget.questions.length,
+      correct: progress.correctCount,
+    );
+    if (ReadinessRule.standard.isReady(mastery: mastery, mockPassed: progress.mockPassedEver)) {
+      await ref.read(outfitProvider.notifier).markReady(UkalabCert.gKentei);
+    }
+  }
+
   void _next() {
     if (_index + 1 < _picked.length) {
       setState(() => _index++);
     } else {
-      final rule = widget.exam.levels.first.passRule;
-      setState(() {
-        _result = scoreMockExam(questions: _picked, answers: _answers, rule: rule);
-      });
+      _finish();
     }
   }
 
@@ -88,7 +112,7 @@ class _MockExamScreenState extends State<MockExamScreen> {
           child: ResultSummary(
             correct: result.total.score,
             total: result.total.max,
-            passRatio: 0.70,
+            passRatio: level.passRule.totalPct / 100,
             onRetry: _start,
           ),
         ),
