@@ -1,12 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:yourwish_kentei/yourwish_kentei.dart';
 
+import 'terms_screen.dart';
+
 /// 「ホーム」タブ。推し・コインは後続で追加（決定67〜77）。
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key, required this.exam, required this.questionCount});
+  const HomeScreen({
+    super.key,
+    required this.exam,
+    required this.questionCount,
+    required this.terms,
+  });
 
   final ExamConfig exam;
   final int questionCount;
+  final List<Term> terms;
 
   @override
   Widget build(BuildContext context) {
@@ -38,6 +46,23 @@ class HomeScreen extends StatelessWidget {
                     style: theme.textTheme.bodyMedium,
                   ),
                 ],
+              ),
+            ),
+          ),
+          const SizedBox(height: 16),
+          Card(
+            child: ListTile(
+              leading: const Icon(Icons.menu_book_outlined),
+              title: const Text('用語集'),
+              subtitle: Text('収録${terms.length}語。わからない用語をいつでも調べられます。'),
+              trailing: const Icon(Icons.chevron_right),
+              onTap: () => Navigator.of(context).push(
+                MaterialPageRoute<void>(
+                  builder: (context) => Scaffold(
+                    appBar: AppBar(title: const Text('用語集')),
+                    body: TermsScreen(exam: exam, terms: terms),
+                  ),
+                ),
               ),
             ),
           ),

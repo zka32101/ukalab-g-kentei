@@ -1,18 +1,36 @@
 import 'dart:convert';
 
+import 'package:app_common_kit/app_common_kit.dart' show TermReference;
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:yourwish_kentei/yourwish_kentei.dart';
 
-/// G検定の試験定義と問題データを assets から読み込む。
+/// G検定の試験定義・問題データ・用語データを assets から読み込む。
 class ExamData {
-  const ExamData({required this.exam, required this.questions});
+  const ExamData({
+    required this.exam,
+    required this.questions,
+    required this.terms,
+  });
 
   final ExamConfig exam;
   final List<Question> questions;
+  final List<Term> terms;
 
   List<Question> get activeQuestions =>
       questions.where((q) => !q.disabled).toList();
+
+  Term? termById(String termId) {
+    for (final t in terms) {
+      if (t.termId == termId) return t;
+    }
+    return null;
+  }
+
+  /// 問題文・解説文中の用語をタップ可能にするための、見出し語ベースの参照一覧。
+  List<TermReference> get termReferences => [
+        for (final t in terms) TermReference(termId: t.termId, matchText: t.term),
+      ];
 }
 
 Future<ExamData> loadExamData() async {
@@ -21,14 +39,24 @@ Future<ExamData> loadExamData() async {
 
   final jsonl = await rootBundle.loadString('assets/questions/g_kentei.jsonl');
   final parsed = parseQuestionsJsonl(jsonl);
+
+  final termsJsonl = await rootBundle.loadString('assets/terms/g_kentei.jsonl');
+  final parsedTerms = parseTermsJsonl(termsJsonl);
+
   final issues = [
     ...parsed.issues,
     ...validateQuestions(parsed.questions, exam: exam),
+    ...parsedTerms.issues,
+    ...validateTerms(parsedTerms.terms, exam: exam, questions: parsed.questions),
   ];
   if (issues.isNotEmpty) {
-    throw StateError('問題データに不備があります: ${issues.first}');
+    throw StateError('問題・用語データに不備があります: ${issues.first}');
   }
-  return ExamData(exam: exam, questions: parsed.questions);
+  return ExamData(
+    exam: exam,
+    questions: parsed.questions,
+    terms: parsedTerms.terms,
+  );
 }
 
 final examDataProvider = FutureProvider<ExamData>((ref) => loadExamData());

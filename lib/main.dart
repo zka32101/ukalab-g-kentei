@@ -46,8 +46,12 @@ class _RootPage extends ConsumerWidget {
         final questions = data.activeQuestions;
         return UkalabShell(
           pages: [
-            HomeScreen(exam: data.exam, questionCount: questions.length),
-            LearnScreen(questions: questions),
+            HomeScreen(
+              exam: data.exam,
+              questionCount: questions.length,
+              terms: data.terms,
+            ),
+            LearnScreen(questions: questions, terms: data.terms),
             MockExamScreen(exam: data.exam, questions: questions),
             const RecordScreen(),
             const SettingsScreen(),
