@@ -103,4 +103,26 @@ void main() {
     expect(find.text('正解'), findsOneWidget);
     expect(find.text('15%'), findsOneWidget);
   });
+
+  testWidgets('推しの答案を添削を開いて正解をタップすると解説が出る', (tester) async {
+    await tester.runAsync(() async {
+      await tester.pumpWidget(_app());
+      await Future.delayed(const Duration(milliseconds: 300));
+    });
+    await tester.pumpAndSettle();
+
+    await tester.ensureVisible(find.text('推しの答案を添削'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('推しの答案を添削'));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('過学習の対策'));
+    await tester.pumpAndSettle();
+    expect(find.byType(TeachMascotWidget), findsOneWidget);
+    expect(find.text('ここが分からない…'), findsOneWidget);
+
+    await tester.tap(find.widgetWithText(ChoiceChip, '未知データでの性能(汎化性能)'));
+    await tester.pumpAndSettle();
+    expect(find.text('わかった!'), findsOneWidget);
+  });
 }
