@@ -11,11 +11,15 @@ class ExamData {
     required this.exam,
     required this.questions,
     required this.terms,
+    required this.boundaryScenarios,
   });
 
   final ExamConfig exam;
   final List<Question> questions;
   final List<Term> terms;
+
+  /// 境界線スライダー（型①、決定76・77）の場面一覧。
+  final List<BoundaryScenario> boundaryScenarios;
 
   List<Question> get activeQuestions =>
       questions.where((q) => !q.disabled).toList();
@@ -43,11 +47,17 @@ Future<ExamData> loadExamData() async {
   final termsJsonl = await rootBundle.loadString('assets/terms/g_kentei.jsonl');
   final parsedTerms = parseTermsJsonl(termsJsonl);
 
+  final boundaryJsonl =
+      await rootBundle.loadString('assets/experience/g_kentei.jsonl');
+  final parsedBoundary = parseBoundaryScenariosJsonl(boundaryJsonl);
+
   final issues = [
     ...parsed.issues,
     ...validateQuestions(parsed.questions, exam: exam),
     ...parsedTerms.issues,
     ...validateTerms(parsedTerms.terms, exam: exam, questions: parsed.questions),
+    ...parsedBoundary.issues,
+    ...validateBoundaryScenarios(parsedBoundary.scenarios, exam: exam),
   ];
   if (issues.isNotEmpty) {
     throw StateError('問題・用語データに不備があります: ${issues.first}');
@@ -56,6 +66,7 @@ Future<ExamData> loadExamData() async {
     exam: exam,
     questions: parsed.questions,
     terms: parsedTerms.terms,
+    boundaryScenarios: parsedBoundary.scenarios,
   );
 }
 
