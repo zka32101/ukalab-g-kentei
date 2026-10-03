@@ -4,9 +4,15 @@ import 'package:yourwish_kentei/yourwish_kentei.dart';
 
 /// 「学ぶ」タブ: 短い演習セッション（最小実装。間隔反復・弱点優先は後続）。
 class LearnScreen extends StatefulWidget {
-  const LearnScreen({super.key, required this.questions, this.sessionSize = 10});
+  const LearnScreen({
+    super.key,
+    required this.questions,
+    required this.terms,
+    this.sessionSize = 10,
+  });
 
   final List<Question> questions;
+  final List<Term> terms;
   final int sessionSize;
 
   @override
@@ -48,6 +54,44 @@ class _LearnScreenState extends State<LearnScreen> {
     });
   }
 
+  List<TermReference> get _termRefs => [
+        for (final t in widget.terms) TermReference(termId: t.termId, matchText: t.term),
+      ];
+
+  Term? _termById(String termId) {
+    for (final t in widget.terms) {
+      if (t.termId == termId) return t;
+    }
+    return null;
+  }
+
+  void _openTerm(Term term) {
+    showTermCard(
+      context,
+      term: term.term,
+      headline: term.headline,
+      definition: term.definition,
+      analogy: term.analogy,
+      commonMistake: term.commonMistake,
+      relatedTerms: [
+        for (final id in term.relatedTermIds)
+          if (_termById(id) != null)
+            RelatedTermRef(termId: id, label: _termById(id)!.term),
+      ],
+      onRelatedTermTap: (nextId) {
+        final next = _termById(nextId);
+        if (next == null) return;
+        Navigator.of(context).pop();
+        _openTerm(next);
+      },
+    );
+  }
+
+  void _onTermTap(String termId) {
+    final term = _termById(termId);
+    if (term != null) _openTerm(term);
+  }
+
   @override
   Widget build(BuildContext context) {
     if (widget.questions.isEmpty) {
@@ -74,6 +118,11 @@ class _LearnScreenState extends State<LearnScreen> {
         children: [
           QuestionCard(
             text: q.prompt,
+            textWidget: TappableTermText(
+              text: q.prompt,
+              terms: _termRefs,
+              onTermTap: _onTermTap,
+            ),
             index: _session.index + 1,
             total: _session.questions.length,
             child: Column(
@@ -98,6 +147,11 @@ class _LearnScreenState extends State<LearnScreen> {
             const SizedBox(height: 16),
             ExplanationPanel(
               body: q.explanation,
+              bodyWidget: TappableTermText(
+                text: q.explanation,
+                terms: _termRefs,
+                onTermTap: _onTermTap,
+              ),
               sourceRef: q.sourceRef,
             ),
             const SizedBox(height: 16),

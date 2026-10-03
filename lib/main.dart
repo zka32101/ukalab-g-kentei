@@ -51,7 +51,7 @@ class _RootPage extends ConsumerWidget {
               questionCount: questions.length,
               terms: data.terms,
             ),
-            LearnScreen(questions: questions),
+            LearnScreen(questions: questions, terms: data.terms),
             MockExamScreen(exam: data.exam, questions: questions),
             const RecordScreen(),
             const SettingsScreen(),

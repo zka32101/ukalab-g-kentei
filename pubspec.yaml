@@ -15,7 +15,7 @@ dependencies:
   app_common_kit:
     git:
       url: https://github.com/zka32101/app_common_kit.git
-      ref: d3d401e566fe9edaf87bb2941c5f30f126fc2e6f # v0.3.0: 用語カードUI
+      ref: d7af1fc84feef9cb95142e594855a62c5994f690 # v0.3.1: QuestionCard/ExplanationPanel本文差し替え
   yourwish_kentei:
     git:
       url: https://github.com/zka32101/yourwish_kentei.git

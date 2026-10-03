@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:app_common_kit/app_common_kit.dart' show TermReference;
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:yourwish_kentei/yourwish_kentei.dart';
@@ -25,6 +26,11 @@ class ExamData {
     }
     return null;
   }
+
+  /// 問題文・解説文中の用語をタップ可能にするための、見出し語ベースの参照一覧。
+  List<TermReference> get termReferences => [
+        for (final t in terms) TermReference(termId: t.termId, matchText: t.term),
+      ];
 }
 
 Future<ExamData> loadExamData() async {

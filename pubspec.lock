@@ -5,11 +5,11 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: d3d401e566fe9edaf87bb2941c5f30f126fc2e6f
-      resolved-ref: d3d401e566fe9edaf87bb2941c5f30f126fc2e6f
+      ref: d7af1fc84feef9cb95142e594855a62c5994f690
+      resolved-ref: d7af1fc84feef9cb95142e594855a62c5994f690
       url: "https://github.com/zka32101/app_common_kit.git"
     source: git
-    version: "0.3.0"
+    version: "0.3.1"
   async:
     dependency: transitive
     description:
