@@ -1,9 +1,12 @@
 import 'package:app_common_kit/app_common_kit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:yourwish_kentei/yourwish_kentei.dart';
 
+import '../data/progress_store.dart';
+
 /// 「学ぶ」タブ: 短い演習セッション（最小実装。間隔反復・弱点優先は後続）。
-class LearnScreen extends StatefulWidget {
+class LearnScreen extends ConsumerStatefulWidget {
   const LearnScreen({
     super.key,
     required this.questions,
@@ -16,10 +19,10 @@ class LearnScreen extends StatefulWidget {
   final int sessionSize;
 
   @override
-  State<LearnScreen> createState() => _LearnScreenState();
+  ConsumerState<LearnScreen> createState() => _LearnScreenState();
 }
 
-class _LearnScreenState extends State<LearnScreen> {
+class _LearnScreenState extends ConsumerState<LearnScreen> {
   late PracticeSession _session = _newSession();
   int? _selected;
   bool _answered = false;
@@ -40,11 +43,17 @@ class _LearnScreenState extends State<LearnScreen> {
 
   void _select(int i) {
     if (_answered) return;
+    final q = _session.current;
     setState(() {
       _selected = i;
       _answered = true;
     });
     _session.answer(i);
+    if (q != null) {
+      final correct = i == q.answerIndex;
+      ref.read(progressProvider.notifier).recordAnswer(q.qid, correct: correct);
+      ref.read(coinProvider.notifier).grant(CoinEvent.newQuestion(q.qid));
+    }
   }
 
   void _next() {

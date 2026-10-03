@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:yourwish_kentei/yourwish_kentei.dart';
 
+import '../widgets/oshi_card.dart';
 import 'terms_screen.dart';
 
-/// 「ホーム」タブ。推し・コインは後続で追加（決定67〜77）。
+/// 「ホーム」タブ。推し・学習コインを表示（決定67〜77）。
 class HomeScreen extends StatelessWidget {
   const HomeScreen({
     super.key,
@@ -30,7 +31,12 @@ class HomeScreen extends StatelessWidget {
             'JDLA Deep Learning for GENERAL 対策（JDLAとは無関係の非公式アプリ）',
             style: theme.textTheme.bodySmall,
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: 16),
+          OshiCard(
+            totalQuestions: questionCount,
+            examDate: exam.examDates.isEmpty ? null : exam.examDates.first,
+          ),
+          const SizedBox(height: 16),
           Card(
             child: Padding(
               padding: const EdgeInsets.all(16),
