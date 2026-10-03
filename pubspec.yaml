@@ -15,11 +15,11 @@ dependencies:
   app_common_kit:
     git:
       url: https://github.com/zka32101/app_common_kit.git
-      ref: 8f01518996800572e628d6ce3a7342ed6936306c # v0.4.0: BoundarySliderWidget
+      ref: e1e0e77a69fdc77611e874b98e94374a4a387878 # v0.5.0: PredictRunWidget
   yourwish_kentei:
     git:
       url: https://github.com/zka32101/yourwish_kentei.git
-      ref: 95e4a437e7cbb113137df5242df50cfb4c20c7a6 # v0.6.0: 境界線スライダー(型①)
+      ref: 479e1cb6ca74d4f951f63b840bea5a9313211f15 # v0.7.0: 予測→実行(型②)
 
   # 状態管理
   flutter_riverpod: ">=2.5.1 <3.0.0"
