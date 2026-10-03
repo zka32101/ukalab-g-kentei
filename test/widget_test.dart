@@ -59,4 +59,25 @@ void main() {
       findsOneWidget,
     );
   });
+
+  testWidgets('境界線スライダーを開いて条件を切り替えると判定が変わる', (tester) async {
+    await tester.runAsync(() async {
+      await tester.pumpWidget(_app());
+      await Future.delayed(const Duration(milliseconds: 300));
+    });
+    await tester.pumpAndSettle();
+
+    await tester.ensureVisible(find.text('AIと法律の境界線'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('AIと法律の境界線'));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('学習用データの収集（著作権法30条の4）'));
+    await tester.pumpAndSettle();
+    expect(find.byType(BoundarySliderWidget), findsOneWidget);
+
+    await tester.tap(find.text('作品の思想・感情を享受させる目的を含むか'));
+    await tester.pumpAndSettle();
+    expect(find.textContaining('享受目的を含むため'), findsOneWidget);
+  });
 }

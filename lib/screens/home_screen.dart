@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:yourwish_kentei/yourwish_kentei.dart';
 
 import '../widgets/oshi_card.dart';
+import 'boundary_screen.dart';
 import 'terms_screen.dart';
 
 /// 「ホーム」タブ。推し・学習コインを表示（決定67〜77）。
@@ -11,11 +12,13 @@ class HomeScreen extends StatelessWidget {
     required this.exam,
     required this.questionCount,
     required this.terms,
+    required this.boundaryScenarios,
   });
 
   final ExamConfig exam;
   final int questionCount;
   final List<Term> terms;
+  final List<BoundaryScenario> boundaryScenarios;
 
   @override
   Widget build(BuildContext context) {
@@ -72,6 +75,25 @@ class HomeScreen extends StatelessWidget {
               ),
             ),
           ),
+          if (boundaryScenarios.isNotEmpty) ...[
+            const SizedBox(height: 16),
+            Card(
+              child: ListTile(
+                leading: const Icon(Icons.balance_outlined),
+                title: const Text('AIと法律の境界線'),
+                subtitle: const Text('条件を切り替えて、判定が変わる「境目」を体験できます。'),
+                trailing: const Icon(Icons.chevron_right),
+                onTap: () => Navigator.of(context).push(
+                  MaterialPageRoute<void>(
+                    builder: (context) => Scaffold(
+                      appBar: AppBar(title: const Text('AIと法律の境界線')),
+                      body: BoundaryScreen(scenarios: boundaryScenarios),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
         ],
       ),
     );
