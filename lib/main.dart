@@ -9,8 +9,21 @@ import 'screens/mock_exam_screen.dart';
 import 'screens/record_screen.dart';
 import 'screens/settings_screen.dart';
 
-void main() {
-  runApp(const ProviderScope(child: UkalabGKenteiApp()));
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // 学習コイン（app_common_kit）。財布はアプリごとに端末内保存（決定67〜77）。
+  final coinService = CoinService(store: SharedPreferencesCoinStore('g_kentei'));
+  await coinService.load();
+
+  final container = ProviderContainer(
+    overrides: [coinServiceProvider.overrideWithValue(coinService)],
+  );
+
+  runApp(UncontrolledProviderScope(
+    container: container,
+    child: const UkalabGKenteiApp(),
+  ));
 }
 
 class UkalabGKenteiApp extends StatelessWidget {

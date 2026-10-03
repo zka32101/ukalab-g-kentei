@@ -1,6 +1,7 @@
 import 'package:app_common_kit/app_common_kit.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:ukalab_g_kentei/screens/learn_screen.dart';
 import 'package:yourwish_kentei/yourwish_kentei.dart';
@@ -50,14 +51,42 @@ Term _term() => const Term(
     );
 
 void main() {
+  testWidgets('正解すると学習コインが付与される', (tester) async {
+    final coinService = CoinService(store: InMemoryCoinStore());
+    await coinService.load();
+    await tester.pumpWidget(ProviderScope(
+      overrides: [coinServiceProvider.overrideWithValue(coinService)],
+      child: MaterialApp(
+        home: Scaffold(
+          body: LearnScreen(
+            questions: [_question(), _question2()],
+            terms: const [],
+            sessionSize: 2,
+          ),
+        ),
+      ),
+    ));
+    await tester.pumpAndSettle();
+
+    expect(coinService.balance, 0);
+    await tester.tap(find.text('データが少ない場合'));
+    await tester.pumpAndSettle();
+    expect(coinService.balance, 1);
+  });
+
   testWidgets('問題文・解説文中の用語をタップすると用語カードが開く', (tester) async {
-    await tester.pumpWidget(MaterialApp(
-      theme: UkalabTheme.light(field: UkalabField.ai, cert: UkalabCert.gKentei),
-      home: Scaffold(
-        body: LearnScreen(
-          questions: [_question(), _question2()],
-          terms: [_term()],
-          sessionSize: 2,
+    await tester.pumpWidget(ProviderScope(
+      overrides: [
+        coinServiceProvider.overrideWithValue(CoinService(store: InMemoryCoinStore())),
+      ],
+      child: MaterialApp(
+        theme: UkalabTheme.light(field: UkalabField.ai, cert: UkalabCert.gKentei),
+        home: Scaffold(
+          body: LearnScreen(
+            questions: [_question(), _question2()],
+            terms: [_term()],
+            sessionSize: 2,
+          ),
         ),
       ),
     ));

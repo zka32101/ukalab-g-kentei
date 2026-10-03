@@ -4,15 +4,25 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:ukalab_g_kentei/main.dart';
 
+// MascotWidget は animate: true が既定のため、disableAnimations なしでは
+// アニメーションが回り続けて pumpAndSettle がタイムアウトする。
+Widget _app() => ProviderScope(
+      overrides: [
+        coinServiceProvider.overrideWithValue(CoinService(store: InMemoryCoinStore())),
+      ],
+      child: MediaQuery(
+        data: const MediaQueryData(disableAnimations: true),
+        child: const UkalabGKenteiApp(),
+      ),
+    );
+
 void main() {
   testWidgets('起動して問題データを読み込み、ホーム画面が表示される', (tester) async {
     // assets からの読み込みは実際の非同期I/Oのため、pump だけでは
     // fake async のタイミングと競合してタイムアウトすることがある。
     // runAsync で実際の非同期ガップを許可してから反映させる。
     await tester.runAsync(() async {
-      await tester.pumpWidget(
-        const ProviderScope(child: UkalabGKenteiApp()),
-      );
+      await tester.pumpWidget(_app());
       await Future.delayed(const Duration(milliseconds: 300));
     });
     await tester.pumpAndSettle();
@@ -25,9 +35,7 @@ void main() {
 
   testWidgets('用語集を開いて検索し、用語カードが開く', (tester) async {
     await tester.runAsync(() async {
-      await tester.pumpWidget(
-        const ProviderScope(child: UkalabGKenteiApp()),
-      );
+      await tester.pumpWidget(_app());
       await Future.delayed(const Duration(milliseconds: 300));
     });
     await tester.pumpAndSettle();
