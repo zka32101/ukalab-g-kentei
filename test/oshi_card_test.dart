@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:ukalab_g_kentei/widgets/oshi_card.dart';
+import 'package:ukalab_g_kentei/widgets/oshi_wardrobe.dart';
 
 Widget _app(Widget child) => ProviderScope(
       overrides: [
@@ -51,5 +52,17 @@ void main() {
     await tester.pumpAndSettle();
     expect(tester.takeException(), isNull);
     expect(find.text('あなたの推し  Lv1'), findsOneWidget);
+  });
+
+  testWidgets('メニューの「着替え・ショップ」から衣装画面に遷移する', (tester) async {
+    await tester.pumpWidget(_app(const OshiCard(totalQuestions: 600)));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byIcon(Icons.more_vert));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('着替え・ショップ'));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(OshiWardrobeView), findsOneWidget);
   });
 }
