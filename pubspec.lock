@@ -5,11 +5,11 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: e1e0e77a69fdc77611e874b98e94374a4a387878
-      resolved-ref: e1e0e77a69fdc77611e874b98e94374a4a387878
+      ref: "15f267f8525aca8f0042d19e5a0048bbf9365d87"
+      resolved-ref: "15f267f8525aca8f0042d19e5a0048bbf9365d87"
       url: "https://github.com/zka32101/app_common_kit.git"
     source: git
-    version: "0.5.0"
+    version: "0.6.0"
   async:
     dependency: transitive
     description:
@@ -458,11 +458,11 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: "479e1cb6ca74d4f951f63b840bea5a9313211f15"
-      resolved-ref: "479e1cb6ca74d4f951f63b840bea5a9313211f15"
+      ref: c4d4318be965f9406e2fc452a48fff4045503c8a
+      resolved-ref: c4d4318be965f9406e2fc452a48fff4045503c8a
       url: "https://github.com/zka32101/yourwish_kentei.git"
     source: git
-    version: "0.7.0"
+    version: "0.8.0"
 sdks:
   dart: ">=3.9.2 <4.0.0"
   flutter: ">=3.35.1"

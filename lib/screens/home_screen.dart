@@ -4,6 +4,7 @@ import 'package:yourwish_kentei/yourwish_kentei.dart';
 import '../widgets/oshi_card.dart';
 import 'boundary_screen.dart';
 import 'predict_run_screen.dart';
+import 'teach_mascot_screen.dart';
 import 'terms_screen.dart';
 
 /// 「ホーム」タブ。推し・学習コインを表示（決定67〜77）。
@@ -15,6 +16,7 @@ class HomeScreen extends StatelessWidget {
     required this.terms,
     required this.boundaryScenarios,
     required this.predictRunScenarios,
+    required this.misconceptionScenarios,
   });
 
   final ExamConfig exam;
@@ -22,6 +24,7 @@ class HomeScreen extends StatelessWidget {
   final List<Term> terms;
   final List<BoundaryScenario> boundaryScenarios;
   final List<PredictRunScenario> predictRunScenarios;
+  final List<MisconceptionScenario> misconceptionScenarios;
 
   @override
   Widget build(BuildContext context) {
@@ -110,6 +113,25 @@ class HomeScreen extends StatelessWidget {
                     builder: (context) => Scaffold(
                       appBar: AppBar(title: const Text('予測→実行')),
                       body: PredictRunScreen(scenarios: predictRunScenarios),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+          if (misconceptionScenarios.isNotEmpty) ...[
+            const SizedBox(height: 16),
+            Card(
+              child: ListTile(
+                leading: const Icon(Icons.edit_note_outlined),
+                title: const Text('推しの答案を添削'),
+                subtitle: const Text('推しの誤りをタップして直すと、「わかった!」の反応が見られます。'),
+                trailing: const Icon(Icons.chevron_right),
+                onTap: () => Navigator.of(context).push(
+                  MaterialPageRoute<void>(
+                    builder: (context) => Scaffold(
+                      appBar: AppBar(title: const Text('推しの答案を添削')),
+                      body: TeachMascotScreen(scenarios: misconceptionScenarios),
                     ),
                   ),
                 ),

@@ -20,14 +20,15 @@ assets/
   exam/g_kentei.json        ExamConfig（公式10項目を章立てに採用）
   questions/g_kentei.jsonl  問題データ（JSON Lines）。600問（企画設計書§4の目標配分どおり）
   terms/g_kentei.jsonl      用語データ（決定50）。399語（目標約400語をほぼ達成）
-  experience/g_kentei.jsonl         境界線スライダー（型①）の場面データ。3場面×4条件
-  experience/predict_g_kentei.jsonl 予測→実行（型②）の場面データ。ベイズ・期待値・正規分布
+  experience/g_kentei.jsonl              境界線スライダー（型①）の場面データ。3場面×4条件
+  experience/predict_g_kentei.jsonl      予測→実行（型②）の場面データ。ベイズ・期待値・正規分布
+  experience/teach_mascot_g_kentei.jsonl 推しの答案を添削（型③）の場面データ
 lib/
-  data/exam_repository.dart  assets から ExamConfig・問題・用語・境界線・予測データを読み込む
+  data/exam_repository.dart  assets から ExamConfig・問題・用語・境界線・予測・答案添削データを読み込む
   data/progress_store.dart   推しの成長段階を出すための軽量な学習進捗（端末内保存）
   widgets/oshi_card.dart     ホームの「推し」カード（MascotWidget・学習コイン残高）。
                              衣装の着替え・ショップは app_common_kit の WardrobeScreen を使う
-  screens/                   ホーム／学ぶ／模擬／記録／設定／用語集／境界線スライダー／予測→実行
+  screens/                   ホーム／学ぶ／模擬／記録／設定／用語集／境界線スライダー／予測→実行／答案添削
   main.dart
 ```
 
@@ -42,7 +43,7 @@ flutter test
 問題・用語データの検証（配信前・CI）:
 
 ```bash
-dart run yourwish_kentei:validate_content assets/exam/g_kentei.json --terms assets/terms/g_kentei.jsonl --boundary assets/experience/g_kentei.jsonl --predict assets/experience/predict_g_kentei.jsonl assets/questions/g_kentei.jsonl
+dart run yourwish_kentei:validate_content assets/exam/g_kentei.json --terms assets/terms/g_kentei.jsonl --boundary assets/experience/g_kentei.jsonl --predict assets/experience/predict_g_kentei.jsonl --misconception assets/experience/teach_mascot_g_kentei.jsonl assets/questions/g_kentei.jsonl
 ```
 
 ## 現状・未完了（2026-10-03 時点）
@@ -51,6 +52,7 @@ dart run yourwish_kentei:validate_content assets/exam/g_kentei.json --terms asse
 - 用語カード（決定50）は実装済み（用語データ399語、ホーム画面から「用語集」で検索・閲覧、用語カードはボトムシートで開き関連用語をタップで移動、問題文・解説文中の用語には下線＋タップで用語カードが開く）。**追加・修正分は運営者確認・出典の裏取りが必須**。
 - 推し・学習コイン・衣装は実装済み（ホーム画面に「推し」カード。「学ぶ」タブで新しい問題に解答するとコイン+1、網羅率×正答率で推しがLv1〜5に成長。メニューの「着替え・ショップ」から通常衣装をコイン購入・着用できる）。合格記念・試験日の装い・準備完了の装いは、合格報告・模擬試験・最短ルートプランナーが未実装のため条件を満たせない。連続学習日数・模擬試験でのコイン付与は未実装（決定67〜77参照、学習記録機能の整備後に対応）。
 - 学習体験の「型」①境界線スライダーは実装済み（ホーム画面から「AIと法律の境界線」を開き、「学習用データの収集」「生成物の利用」「個人情報の扱い」の3場面で条件をスイッチで切り替え、判定の目安と根拠条文が変わる様子を体験できる）。**法律データは自作の仮データで、運営者確認・一次資料での裏取りが必須**（著作権法30条の4・個人情報保護法の構成は2026-10-03時点の現行法に基づくが、2026-07-17公布の個人情報保護法改正は段階的施行のため施行状況の継続確認が必要）。
-- 学習体験の「型」②予測→実行は実装済み（ホーム画面から「予測→実行」を開き、ベイズの定理(検査のパラドックス)・期待値(くじ)・正規分布(68-95-99.7則)の3場面で、先に答えを予測してから正解とのズレ・解説を見られる）。型③推しの答案を添削・型④最短ルートプランナーは未実装。
+- 学習体験の「型」②予測→実行は実装済み（ホーム画面から「予測→実行」を開き、ベイズの定理(検査のパラドックス)・期待値(くじ)・正規分布(68-95-99.7則)の3場面で、先に答えを予測してから正解とのズレ・解説を見られる）。
+- 学習体験の「型」③推しの答案を添削は実装済み（ホーム画面から「推しの答案を添削」を開き、過学習の対策・CNN/RNNの使い分け・教師あり/なし学習という3つのよくある誤解を、推しの誤った答案をタップで直す形で体験できる。推しの成長(Lv)はこの演出とは独立しており、既存の習得度計算のみに基づく)。型④最短ルートプランナーは未実装。
 - 課金（RevenueCat）・広告（AdMob）、Firebase連携は未実装。
 - 詳細設計は Google Drive の `design/kentei-engine（うかラボ）` フォルダの企画設計書・決定事項ログを参照。
