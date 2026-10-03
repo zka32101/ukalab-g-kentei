@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:ukalab_g_kentei/widgets/oshi_card.dart';
-import 'package:ukalab_g_kentei/widgets/oshi_wardrobe.dart';
 
 Widget _app(Widget child) => ProviderScope(
       overrides: [
         coinServiceProvider.overrideWithValue(CoinService(store: InMemoryCoinStore())),
+        outfitServiceProvider.overrideWithValue(OutfitService(store: InMemoryOutfitStore())),
       ],
       child: MaterialApp(
         theme: UkalabTheme.light(field: UkalabField.ai, cert: UkalabCert.gKentei),
@@ -63,6 +63,6 @@ void main() {
     await tester.tap(find.text('着替え・ショップ'));
     await tester.pumpAndSettle();
 
-    expect(find.byType(OshiWardrobeView), findsOneWidget);
+    expect(find.byType(WardrobeScreen), findsOneWidget);
   });
 }

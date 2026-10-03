@@ -8,7 +8,6 @@ import 'screens/learn_screen.dart';
 import 'screens/mock_exam_screen.dart';
 import 'screens/record_screen.dart';
 import 'screens/settings_screen.dart';
-import 'widgets/oshi_wardrobe.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -75,6 +74,7 @@ class _RootPage extends ConsumerWidget {
               questionCount: questions.length,
               terms: data.terms,
               boundaryScenarios: data.boundaryScenarios,
+              predictRunScenarios: data.predictRunScenarios,
             ),
             LearnScreen(questions: questions, terms: data.terms),
             MockExamScreen(exam: data.exam, questions: questions),

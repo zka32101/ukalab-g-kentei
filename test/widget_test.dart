@@ -9,6 +9,7 @@ import 'package:ukalab_g_kentei/main.dart';
 Widget _app() => ProviderScope(
       overrides: [
         coinServiceProvider.overrideWithValue(CoinService(store: InMemoryCoinStore())),
+        outfitServiceProvider.overrideWithValue(OutfitService(store: InMemoryOutfitStore())),
       ],
       child: MediaQuery(
         data: const MediaQueryData(disableAnimations: true),
@@ -79,5 +80,27 @@ void main() {
     await tester.tap(find.text('作品の思想・感情を享受させる目的を含むか'));
     await tester.pumpAndSettle();
     expect(find.textContaining('享受目的を含むため'), findsOneWidget);
+  });
+
+  testWidgets('予測→実行を開いて予測すると正解とのズレが出る', (tester) async {
+    await tester.runAsync(() async {
+      await tester.pumpWidget(_app());
+      await Future.delayed(const Duration(milliseconds: 300));
+    });
+    await tester.pumpAndSettle();
+
+    await tester.ensureVisible(find.text('予測→実行'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('予測→実行'));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('検査のパラドックス'));
+    await tester.pumpAndSettle();
+    expect(find.byType(PredictRunWidget), findsOneWidget);
+
+    await tester.tap(find.text('予測する'));
+    await tester.pumpAndSettle();
+    expect(find.text('正解'), findsOneWidget);
+    expect(find.text('15%'), findsOneWidget);
   });
 }

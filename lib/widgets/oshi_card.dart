@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../data/progress_store.dart';
-import 'oshi_wardrobe.dart';
 
 /// 習得度から推しの成長段階を決める。網羅率＝解いた問題の種類数÷全問題数、
 /// 正答率＝qidごとの最新の正誤に基づく正答率。
@@ -83,7 +82,7 @@ class _OshiCardState extends ConsumerState<OshiCard> {
       onSelected: (v) {
         if (v == 'wardrobe') {
           Navigator.of(context).push(MaterialPageRoute<void>(
-            builder: (_) => OshiWardrobeView(examPhase: examPhase),
+            builder: (_) => WardrobeScreen(cert: UkalabCert.gKentei, examPhase: examPhase),
           ));
           return;
         }

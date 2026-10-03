@@ -3,6 +3,7 @@ import 'package:yourwish_kentei/yourwish_kentei.dart';
 
 import '../widgets/oshi_card.dart';
 import 'boundary_screen.dart';
+import 'predict_run_screen.dart';
 import 'terms_screen.dart';
 
 /// 「ホーム」タブ。推し・学習コインを表示（決定67〜77）。
@@ -13,12 +14,14 @@ class HomeScreen extends StatelessWidget {
     required this.questionCount,
     required this.terms,
     required this.boundaryScenarios,
+    required this.predictRunScenarios,
   });
 
   final ExamConfig exam;
   final int questionCount;
   final List<Term> terms;
   final List<BoundaryScenario> boundaryScenarios;
+  final List<PredictRunScenario> predictRunScenarios;
 
   @override
   Widget build(BuildContext context) {
@@ -88,6 +91,25 @@ class HomeScreen extends StatelessWidget {
                     builder: (context) => Scaffold(
                       appBar: AppBar(title: const Text('AIと法律の境界線')),
                       body: BoundaryScreen(scenarios: boundaryScenarios),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+          if (predictRunScenarios.isNotEmpty) ...[
+            const SizedBox(height: 16),
+            Card(
+              child: ListTile(
+                leading: const Icon(Icons.timeline_outlined),
+                title: const Text('予測→実行'),
+                subtitle: const Text('先に答えを予測してから、計算結果とのズレを体験できます。'),
+                trailing: const Icon(Icons.chevron_right),
+                onTap: () => Navigator.of(context).push(
+                  MaterialPageRoute<void>(
+                    builder: (context) => Scaffold(
+                      appBar: AppBar(title: const Text('予測→実行')),
+                      body: PredictRunScreen(scenarios: predictRunScenarios),
                     ),
                   ),
                 ),
