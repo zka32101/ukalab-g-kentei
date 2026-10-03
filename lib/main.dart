@@ -8,16 +8,27 @@ import 'screens/learn_screen.dart';
 import 'screens/mock_exam_screen.dart';
 import 'screens/record_screen.dart';
 import 'screens/settings_screen.dart';
+import 'widgets/oshi_wardrobe.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // 学習コイン（app_common_kit）。財布はアプリごとに端末内保存（決定67〜77）。
-  final coinService = CoinService(store: SharedPreferencesCoinStore('g_kentei'));
+  // 学習コイン・衣装（app_common_kit）。財布・衣装台帳はアプリごとに端末内保存
+  // （決定67〜77）。ショップには通常衣装（G検定、コイン購入）だけを並べる。
+  final coinService = CoinService(
+    store: SharedPreferencesCoinStore('g_kentei'),
+    shop: OutfitCatalog.shopItems([UkalabCert.gKentei]),
+  );
   await coinService.load();
 
+  final outfitService = OutfitService(store: SharedPreferencesOutfitStore('g_kentei'));
+  await outfitService.load();
+
   final container = ProviderContainer(
-    overrides: [coinServiceProvider.overrideWithValue(coinService)],
+    overrides: [
+      coinServiceProvider.overrideWithValue(coinService),
+      outfitServiceProvider.overrideWithValue(outfitService),
+    ],
   );
 
   runApp(UncontrolledProviderScope(

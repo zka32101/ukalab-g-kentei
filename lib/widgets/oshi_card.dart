@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../data/progress_store.dart';
+import 'oshi_wardrobe.dart';
 
 /// 習得度から推しの成長段階を決める。網羅率＝解いた問題の種類数÷全問題数、
 /// 正答率＝qidごとの最新の正誤に基づく正答率。
@@ -72,14 +73,28 @@ class _OshiCardState extends ConsumerState<OshiCard> {
     final display = ref.watch(oshiDisplayProvider);
     final theme = Theme.of(context);
     final coin = ref.watch(coinProvider);
-    final menu = PopupMenuButton<MascotDisplay>(
+    final now = DateTime.now();
+    final examPhase = MascotDayState(examDate: widget.examDate).examPhase(now);
+    // PopupMenuButton は showMenu の戻り値が null だと「キャンセル」と区別できず
+    // onSelected を呼ばないため、value は null にできない。文字列で表す。
+    final menu = PopupMenuButton<String>(
       tooltip: '推しの表示',
       icon: const Icon(Icons.more_vert),
-      onSelected: (d) => ref.read(oshiDisplayProvider.notifier).set(d),
+      onSelected: (v) {
+        if (v == 'wardrobe') {
+          Navigator.of(context).push(MaterialPageRoute<void>(
+            builder: (_) => OshiWardrobeView(examPhase: examPhase),
+          ));
+          return;
+        }
+        final d = MascotDisplay.values.firstWhere((e) => e.name == v);
+        ref.read(oshiDisplayProvider.notifier).set(d);
+      },
       itemBuilder: (_) => const [
-        PopupMenuItem(value: MascotDisplay.normal, child: Text('通常')),
-        PopupMenuItem(value: MascotDisplay.small, child: Text('小さく表示')),
-        PopupMenuItem(value: MascotDisplay.hidden, child: Text('表示しない')),
+        PopupMenuItem(value: 'wardrobe', child: Text('着替え・ショップ')),
+        PopupMenuItem(value: 'normal', child: Text('通常')),
+        PopupMenuItem(value: 'small', child: Text('小さく表示')),
+        PopupMenuItem(value: 'hidden', child: Text('表示しない')),
       ],
     );
 
@@ -99,11 +114,10 @@ class _OshiCardState extends ConsumerState<OshiCard> {
       totalQuestions: widget.totalQuestions,
       correct: progress.correctCount,
     );
-    final now = DateTime.now();
     // 連続学習日数・最終学習日は後続（間隔反復・学習記録）で対応するため、
     // 現時点では常に「未設定」として扱う。
     final day = MascotDayState(examDate: widget.examDate);
-    final situation = switch (day.examPhase(now)) {
+    final situation = switch (examPhase) {
       ExamPhase.today => MascotSituation.examToday,
       ExamPhase.eve => MascotSituation.examEve,
       ExamPhase.close => MascotSituation.examClose,
@@ -112,6 +126,7 @@ class _OshiCardState extends ConsumerState<OshiCard> {
     };
     final line = MascotLines.gentle.pick(situation, seed: _seed);
     final small = display == MascotDisplay.small;
+    final equipped = ref.watch(equippedOutfitProvider);
 
     return Card(
       child: Padding(
@@ -120,8 +135,9 @@ class _OshiCardState extends ConsumerState<OshiCard> {
           children: [
             MascotWidget(
               stage: stage,
+              outfit: equipped,
               expression: day.expression,
-              examPhase: day.examPhase(now),
+              examPhase: examPhase,
               display: display,
               size: small ? 56 : 88,
               line: small ? null : line,
