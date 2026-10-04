@@ -6,6 +6,7 @@ import 'package:yourwish_kentei/yourwish_kentei.dart';
 import '../widgets/oshi_card.dart';
 import 'boundary_screen.dart';
 import 'confusion_matrix_lab_screen.dart';
+import 'conv_lab_screen.dart';
 import 'failure_gallery_screen.dart';
 import 'method_choice_screen.dart';
 import 'ml_lab_screen.dart';
@@ -31,6 +32,7 @@ class HomeScreen extends ConsumerWidget {
     required this.methodChoiceScenarios,
     required this.mlLabDatasets,
     required this.aiNewsItems,
+    required this.convLabImages,
   });
 
   final ExamConfig exam;
@@ -44,6 +46,7 @@ class HomeScreen extends ConsumerWidget {
   final List<MethodChoiceScenario> methodChoiceScenarios;
   final List<MlLabDataset> mlLabDatasets;
   final List<AiNewsItem> aiNewsItems;
+  final List<ConvLabImage> convLabImages;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -244,6 +247,25 @@ class HomeScreen extends ConsumerWidget {
                     builder: (context) => Scaffold(
                       appBar: AppBar(title: const Text('機械学習ラボ')),
                       body: MlLabScreen(datasets: mlLabDatasets),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+          if (convLabImages.isNotEmpty) ...[
+            const SizedBox(height: 16),
+            Card(
+              child: ListTile(
+                leading: const Icon(Icons.grid_view_outlined),
+                title: const Text('画像認識の中身を見る'),
+                subtitle: const Text('畳み込みフィルタを当てて、特徴マップ・プーリング後の変化を見ます。'),
+                trailing: const Icon(Icons.chevron_right),
+                onTap: () => Navigator.of(context).push(
+                  MaterialPageRoute<void>(
+                    builder: (context) => Scaffold(
+                      appBar: AppBar(title: const Text('画像認識の中身を見る')),
+                      body: ConvLabScreen(images: convLabImages),
                     ),
                   ),
                 ),
