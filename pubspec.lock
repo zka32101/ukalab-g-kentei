@@ -458,11 +458,11 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: "8534e42ea8dd770a04e2be5eb54025d1fb57fca2"
-      resolved-ref: "8534e42ea8dd770a04e2be5eb54025d1fb57fca2"
+      ref: "3965dfd180a9b8d27a627727a9acb77c7f36a11f"
+      resolved-ref: "3965dfd180a9b8d27a627727a9acb77c7f36a11f"
       url: "https://github.com/zka32101/yourwish_kentei.git"
     source: git
-    version: "0.9.0"
+    version: "0.9.1"
 sdks:
   dart: ">=3.9.2 <4.0.0"
   flutter: ">=3.35.1"

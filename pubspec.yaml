@@ -19,7 +19,7 @@ dependencies:
   yourwish_kentei:
     git:
       url: https://github.com/zka32101/yourwish_kentei.git
-      ref: 3965dfd180a9b8d27a627727a9acb77c7f36a11f # v0.10.0: 145問ペース走(型④の直前版)
+      ref: 3965dfd180a9b8d27a627727a9acb77c7f36a11f # v0.9.0: 145問ペース走(型④の直前版)
 
   # 状態管理
   flutter_riverpod: ">=2.5.1 <3.0.0"
