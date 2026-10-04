@@ -15,7 +15,7 @@ dependencies:
   app_common_kit:
     git:
       url: https://github.com/zka32101/app_common_kit.git
-      ref: 199c4efa6975b775402e7cdbe4a8dc53c3891673 # feat/exam-stats-service（PR #29マージ後に正式SHAへ更新）
+      ref: 7c8b4f9d3100c27a891804ad8163bf93d9a511f9 # v0.7.0: 全国平均点・偏差値の匿名集計(ExamStatsService)
   yourwish_kentei:
     git:
       url: https://github.com/zka32101/yourwish_kentei.git
