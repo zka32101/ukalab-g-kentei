@@ -34,6 +34,15 @@ class _MockExamScreenState extends ConsumerState<MockExamScreen> {
   MockExamResult? _result;
   ExamStatsSummary? _statsSummary;
 
+  /// 問題ごとの選択肢の表示順（qid→実際のchoicesインデックスの並び）。
+  /// 正解が常に先頭に来てしまわないよう、問題ごとに1回だけシャッフルする。
+  final Map<String, List<int>> _choiceOrder = {};
+
+  List<int> _orderFor(Question q) => _choiceOrder.putIfAbsent(
+        q.qid,
+        () => List.generate(q.choices.length, (i) => i)..shuffle(),
+      );
+
   void _start() {
     final level = widget.exam.levels.first;
     setState(() {
@@ -43,6 +52,7 @@ class _MockExamScreenState extends ConsumerState<MockExamScreen> {
         seed: DateTime.now().millisecondsSinceEpoch,
       )..shuffle();
       _answers.clear();
+      _choiceOrder.clear();
       _index = 0;
       _started = true;
       _result = null;
@@ -102,6 +112,22 @@ class _MockExamScreenState extends ConsumerState<MockExamScreen> {
     } else {
       _finish();
     }
+  }
+
+  List<Widget> _buildChoices(Question q, int? selected) {
+    final order = _orderFor(q);
+    final widgets = <Widget>[];
+    for (var pos = 0; pos < order.length; pos++) {
+      if (pos > 0) widgets.add(const SizedBox(height: 8));
+      final i = order[pos];
+      widgets.add(ChoiceTile(
+        label: String.fromCharCode(0x41 + pos),
+        text: q.choices[i],
+        state: selected == i ? ChoiceState.selected : ChoiceState.idle,
+        onTap: () => _select(i),
+      ));
+    }
+    return widgets;
   }
 
   @override
@@ -171,17 +197,7 @@ class _MockExamScreenState extends ConsumerState<MockExamScreen> {
             index: _index + 1,
             total: _picked.length,
             child: Column(
-              children: [
-                for (var i = 0; i < q.choices.length; i++) ...[
-                  if (i > 0) const SizedBox(height: 8),
-                  ChoiceTile(
-                    label: String.fromCharCode(0x41 + i),
-                    text: q.choices[i],
-                    state: selected == i ? ChoiceState.selected : ChoiceState.idle,
-                    onTap: () => _select(i),
-                  ),
-                ],
-              ],
+              children: _buildChoices(q, selected),
             ),
           ),
           const SizedBox(height: 16),

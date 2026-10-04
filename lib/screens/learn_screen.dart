@@ -27,6 +27,15 @@ class _LearnScreenState extends ConsumerState<LearnScreen> {
   int? _selected;
   bool _answered = false;
 
+  /// 問題ごとの選択肢の表示順（qid→実際のchoicesインデックスの並び）。
+  /// 正解が常に先頭に来てしまわないよう、問題ごとに1回だけシャッフルする。
+  final Map<String, List<int>> _choiceOrder = {};
+
+  List<int> _orderFor(Question q) => _choiceOrder.putIfAbsent(
+        q.qid,
+        () => List.generate(q.choices.length, (i) => i)..shuffle(),
+      );
+
   PracticeSession _newSession() => PracticeSession(
         pool: widget.questions,
         size: widget.sessionSize.clamp(1, widget.questions.length),
@@ -38,6 +47,7 @@ class _LearnScreenState extends ConsumerState<LearnScreen> {
       _session = _newSession();
       _selected = null;
       _answered = false;
+      _choiceOrder.clear();
     });
   }
 
@@ -108,6 +118,26 @@ class _LearnScreenState extends ConsumerState<LearnScreen> {
     if (term != null) _openTerm(term);
   }
 
+  List<Widget> _buildChoices(Question q) {
+    final order = _orderFor(q);
+    final widgets = <Widget>[];
+    for (var pos = 0; pos < order.length; pos++) {
+      if (pos > 0) widgets.add(const SizedBox(height: 8));
+      final i = order[pos];
+      widgets.add(ChoiceTile(
+        label: String.fromCharCode(0x41 + pos),
+        text: q.choices[i],
+        state: !_answered
+            ? (_selected == i ? ChoiceState.selected : ChoiceState.idle)
+            : (i == q.answerIndex
+                ? ChoiceState.correct
+                : (i == _selected ? ChoiceState.incorrect : ChoiceState.idle)),
+        onTap: () => _select(i),
+      ));
+    }
+    return widgets;
+  }
+
   @override
   Widget build(BuildContext context) {
     if (widget.questions.isEmpty) {
@@ -150,21 +180,7 @@ class _LearnScreenState extends ConsumerState<LearnScreen> {
             index: _session.index + 1,
             total: _session.questions.length,
             child: Column(
-              children: [
-                for (var i = 0; i < q.choices.length; i++) ...[
-                  if (i > 0) const SizedBox(height: 8),
-                  ChoiceTile(
-                    label: String.fromCharCode(0x41 + i),
-                    text: q.choices[i],
-                    state: !_answered
-                        ? (_selected == i ? ChoiceState.selected : ChoiceState.idle)
-                        : (i == q.answerIndex
-                            ? ChoiceState.correct
-                            : (i == _selected ? ChoiceState.incorrect : ChoiceState.idle)),
-                    onTap: () => _select(i),
-                  ),
-                ],
-              ],
+              children: _buildChoices(q),
             ),
           ),
           if (_answered) ...[
