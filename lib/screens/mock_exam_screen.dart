@@ -8,7 +8,8 @@ import '../widgets/oshi_card.dart';
 
 /// 「模擬」タブ: 本試験相当の採点（合格ラインの目安は非公開のため70%を目安と明記）。
 ///
-/// 問題データが145問に満たない間は、今あるぶんだけで模擬試験として出題する。
+/// 出題は科目別の出題数配分(ExamConfig.levels.subjectQuestionCounts)どおりに
+/// 科目ごと抽出する。科目の問題が不足する分はそのまま不足する。
 /// 実施でコイン+10、合格で+50(資格ごとに最初の1回のみ)が付与される
 /// （決定67〜77）。合格すると、習得度と合わせて「準備完了」の判定も行う。
 class MockExamScreen extends ConsumerStatefulWidget {
@@ -30,10 +31,12 @@ class _MockExamScreenState extends ConsumerState<MockExamScreen> {
 
   void _start() {
     final level = widget.exam.levels.first;
-    final count = level.questionCount.clamp(1, widget.questions.length);
     setState(() {
-      _picked = List<Question>.from(widget.questions)..shuffle();
-      _picked = _picked.take(count).toList();
+      _picked = pickMockExamQuestions(
+        pool: widget.questions,
+        level: level,
+        seed: DateTime.now().millisecondsSinceEpoch,
+      )..shuffle();
       _answers.clear();
       _index = 0;
       _started = true;
