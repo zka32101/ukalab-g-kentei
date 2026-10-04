@@ -18,6 +18,7 @@ class ExamData {
     required this.confusionMatrixScenarios,
     required this.methodChoiceScenarios,
     required this.mlLabDatasets,
+    required this.aiNewsItems,
   });
 
   final ExamConfig exam;
@@ -44,6 +45,9 @@ class ExamData {
 
   /// 機械学習ラボ（画期的な機能1）のデータセット一覧。
   final List<MlLabDataset> mlLabDatasets;
+
+  /// 今月のAI動向（画期的な機能10）の一覧。
+  final List<AiNewsItem> aiNewsItems;
 
   List<Question> get activeQuestions =>
       questions.where((q) => !q.disabled).toList();
@@ -99,6 +103,9 @@ Future<ExamData> loadExamData() async {
   final mlLabJsonl = await rootBundle.loadString('assets/experience/ml_lab_g_kentei.jsonl');
   final parsedMlLab = parseMlLabDatasetsJsonl(mlLabJsonl);
 
+  final aiNewsJsonl = await rootBundle.loadString('assets/experience/ai_news_g_kentei.jsonl');
+  final parsedAiNews = parseAiNewsItemsJsonl(aiNewsJsonl);
+
   final issues = [
     ...parsed.issues,
     ...validateQuestions(parsed.questions, exam: exam),
@@ -118,6 +125,12 @@ Future<ExamData> loadExamData() async {
     ...validateMethodChoiceScenarios(parsedMethodChoice.scenarios, exam: exam),
     ...parsedMlLab.issues,
     ...validateMlLabDatasets(parsedMlLab.datasets, exam: exam),
+    ...parsedAiNews.issues,
+    ...validateAiNewsItems(
+      parsedAiNews.items,
+      exam: exam,
+      questionIds: parsed.questions.map((q) => q.qid).toList(),
+    ),
   ];
   if (issues.isNotEmpty) {
     throw StateError('問題・用語データに不備があります: ${issues.first}');
@@ -133,6 +146,7 @@ Future<ExamData> loadExamData() async {
     confusionMatrixScenarios: parsedConfusionMatrix.scenarios,
     methodChoiceScenarios: parsedMethodChoice.scenarios,
     mlLabDatasets: parsedMlLab.datasets,
+    aiNewsItems: parsedAiNews.items,
   );
 }
 

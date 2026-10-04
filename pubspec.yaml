@@ -15,11 +15,11 @@ dependencies:
   app_common_kit:
     git:
       url: https://github.com/zka32101/app_common_kit.git
-      ref: 753a4e1e65b75ed5ef97fec283f14d5ae397b1e9 # v0.8.0: 機械学習ラボ(MlLabWidget)
+      ref: cd931b5839d58f0d70dba1c725174d65c42f0494 # v0.8.0: 今月のAI動向(AiNewsCard)
   yourwish_kentei:
     git:
       url: https://github.com/zka32101/yourwish_kentei.git
-      ref: 2081c56f50d4fdee2fa0b4e91ac41232a6225029 # v0.10.0: 機械学習ラボ(MlLabDataset)のモデル・配信前検証
+      ref: d566cd05194990b62ba887a4fc03b51bba819125 # v0.10.0: 今月のAI動向(AiNewsItem)のモデル・配信前検証
 
   # 状態管理
   flutter_riverpod: ">=2.5.1 <3.0.0"
