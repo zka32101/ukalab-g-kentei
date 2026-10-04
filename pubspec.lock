@@ -13,11 +13,11 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: "9d84ff43d81f50518373adc94b1f315f858a1886"
-      resolved-ref: "9d84ff43d81f50518373adc94b1f315f858a1886"
+      ref: "77f56ef76c6069d641f68c071878e1e80a7f62cf"
+      resolved-ref: "77f56ef76c6069d641f68c071878e1e80a7f62cf"
       url: "https://github.com/zka32101/app_common_kit.git"
     source: git
-    version: "0.7.0"
+    version: "0.8.0"
   async:
     dependency: transitive
     description:
@@ -514,8 +514,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: ac652d0f941e0d2668074c9ecd208f811dfa3cdc
-      resolved-ref: ac652d0f941e0d2668074c9ecd208f811dfa3cdc
+      ref: "434b978c5ec2b5204b9684ea6ec4d39ecdb28e67"
+      resolved-ref: "434b978c5ec2b5204b9684ea6ec4d39ecdb28e67"
       url: "https://github.com/zka32101/yourwish_kentei.git"
     source: git
     version: "0.10.0"

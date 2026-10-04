@@ -131,6 +131,7 @@ class _RootPage extends ConsumerWidget {
               misconceptionScenarios: data.misconceptionScenarios,
               failureCases: data.failureCases,
               confusionMatrixScenarios: data.confusionMatrixScenarios,
+              methodChoiceScenarios: data.methodChoiceScenarios,
             ),
             LearnScreen(questions: questions, terms: data.terms),
             MockExamScreen(exam: data.exam, questions: questions),
