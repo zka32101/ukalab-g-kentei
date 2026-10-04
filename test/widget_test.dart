@@ -321,4 +321,25 @@ void main() {
     expect(find.text('今月のAI動向'), findsOneWidget);
     expect(find.byType(AiNewsCard), findsOneWidget);
   });
+
+  testWidgets('画像認識の中身を見るを開いてフィルタを切り替えられる', (tester) async {
+    await tester.runAsync(() async {
+      await tester.pumpWidget(await _app());
+      await Future.delayed(const Duration(milliseconds: 300));
+    });
+    await tester.pumpAndSettle();
+
+    await tester.ensureVisible(find.text('画像認識の中身を見る'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('画像認識の中身を見る'));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('手書き風の「1」'));
+    await tester.pumpAndSettle();
+    expect(find.byType(ConvLabWidget), findsOneWidget);
+
+    await tester.tap(find.text('ぼかし'));
+    await tester.pumpAndSettle();
+    expect(find.byType(CustomPaint), findsWidgets);
+  });
 }

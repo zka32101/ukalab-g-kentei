@@ -19,6 +19,7 @@ class ExamData {
     required this.methodChoiceScenarios,
     required this.mlLabDatasets,
     required this.aiNewsItems,
+    required this.convLabImages,
   });
 
   final ExamConfig exam;
@@ -48,6 +49,9 @@ class ExamData {
 
   /// 今月のAI動向（画期的な機能10）の一覧。
   final List<AiNewsItem> aiNewsItems;
+
+  /// 画像認識の中身を見る（画期的な機能4）の画像一覧。
+  final List<ConvLabImage> convLabImages;
 
   List<Question> get activeQuestions =>
       questions.where((q) => !q.disabled).toList();
@@ -106,6 +110,9 @@ Future<ExamData> loadExamData() async {
   final aiNewsJsonl = await rootBundle.loadString('assets/experience/ai_news_g_kentei.jsonl');
   final parsedAiNews = parseAiNewsItemsJsonl(aiNewsJsonl);
 
+  final convLabJsonl = await rootBundle.loadString('assets/experience/conv_lab_g_kentei.jsonl');
+  final parsedConvLab = parseConvLabImagesJsonl(convLabJsonl);
+
   final issues = [
     ...parsed.issues,
     ...validateQuestions(parsed.questions, exam: exam),
@@ -131,6 +138,8 @@ Future<ExamData> loadExamData() async {
       exam: exam,
       questionIds: parsed.questions.map((q) => q.qid).toList(),
     ),
+    ...parsedConvLab.issues,
+    ...validateConvLabImages(parsedConvLab.images, exam: exam),
   ];
   if (issues.isNotEmpty) {
     throw StateError('問題・用語データに不備があります: ${issues.first}');
@@ -147,6 +156,7 @@ Future<ExamData> loadExamData() async {
     methodChoiceScenarios: parsedMethodChoice.scenarios,
     mlLabDatasets: parsedMlLab.datasets,
     aiNewsItems: parsedAiNews.items,
+    convLabImages: parsedConvLab.images,
   );
 }
 
