@@ -1,4 +1,6 @@
+import 'package:app_common_kit/app_common_kit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:yourwish_kentei/yourwish_kentei.dart';
 
 import '../widgets/oshi_card.dart';
@@ -11,7 +13,7 @@ import 'teach_mascot_screen.dart';
 import 'terms_screen.dart';
 
 /// 「ホーム」タブ。推し・学習コインを表示（決定67〜77）。
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends ConsumerWidget {
   const HomeScreen({
     super.key,
     required this.exam,
@@ -32,8 +34,9 @@ class HomeScreen extends StatelessWidget {
   final List<FailureCase> failureCases;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
+    final adGate = ref.watch(adGateProvider);
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -197,6 +200,8 @@ class HomeScreen extends StatelessWidget {
               ),
             ),
           ),
+          const SizedBox(height: 16),
+          Center(child: adGate.banner(BannerPlacement.home)),
         ],
       ),
     );

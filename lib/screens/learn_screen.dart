@@ -60,11 +60,14 @@ class _LearnScreenState extends ConsumerState<LearnScreen> {
     }
   }
 
-  void _next() {
+  Future<void> _next() async {
     setState(() {
       _selected = null;
       _answered = false;
     });
+    if (_session.current == null) {
+      await ref.read(adGateProvider).maybeShowInterstitial(InterstitialTrigger.sessionEnd);
+    }
   }
 
   List<TermReference> get _termRefs => [
@@ -112,13 +115,21 @@ class _LearnScreenState extends ConsumerState<LearnScreen> {
     }
     final q = _session.current;
     if (q == null) {
+      final adGate = ref.watch(adGateProvider);
       return Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(24),
-          child: ResultSummary(
-            correct: _session.correctCount,
-            total: _session.questions.length,
-            onRetry: _restart,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ResultSummary(
+                correct: _session.correctCount,
+                total: _session.questions.length,
+                onRetry: _restart,
+              ),
+              const SizedBox(height: 16),
+              adGate.banner(BannerPlacement.result),
+            ],
           ),
         ),
       );

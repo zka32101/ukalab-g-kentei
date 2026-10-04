@@ -1,4 +1,7 @@
+import 'dart:io' show Platform;
+
 import 'package:app_common_kit/app_common_kit.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -8,6 +11,19 @@ import 'screens/learn_screen.dart';
 import 'screens/mock_exam_screen.dart';
 import 'screens/record_screen.dart';
 import 'screens/settings_screen.dart';
+
+/// Google公式のテスト広告ユニットID。本番公開前に実際のIDへ差し替える（決定35）。
+AdUnitIds _testAdUnitIds() => Platform.isIOS
+    ? const AdUnitIds(
+        banner: 'ca-app-pub-3940256099942544/2934735716',
+        interstitial: 'ca-app-pub-3940256099942544/4411468910',
+        rewarded: 'ca-app-pub-3940256099942544/1712485313',
+      )
+    : const AdUnitIds(
+        banner: 'ca-app-pub-3940256099942544/6300978111',
+        interstitial: 'ca-app-pub-3940256099942544/1033173712',
+        rewarded: 'ca-app-pub-3940256099942544/5224354917',
+      );
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,10 +39,23 @@ void main() async {
   final outfitService = OutfitService(store: SharedPreferencesOutfitStore('g_kentei'));
   await outfitService.load();
 
+  // 課金（RevenueCat）は未着手のため、権利は常に無料として扱う
+  // （noads/premiumの実装後にRevenueCatEntitlementServiceへ差し替える）。
+  final entitlementService = FakeEntitlementService();
+
+  // 広告（AdMob、決定35）。noads/premiumの間は何も表示しない。
+  final adGate = await AdGate.init(
+    config: AdConfig(unitIds: _testAdUnitIds()),
+    adsHidden: () => entitlementService.state.adsHidden,
+    isRelease: kReleaseMode,
+  );
+
   final container = ProviderContainer(
     overrides: [
       coinServiceProvider.overrideWithValue(coinService),
       outfitServiceProvider.overrideWithValue(outfitService),
+      entitlementServiceProvider.overrideWithValue(entitlementService),
+      adGateProvider.overrideWithValue(adGate),
     ],
   );
 

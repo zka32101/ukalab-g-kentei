@@ -15,7 +15,7 @@ dependencies:
   app_common_kit:
     git:
       url: https://github.com/zka32101/app_common_kit.git
-      ref: 2e1a2b2d444acdf7a51d42c0bf9f869d6e9f877a # v0.7.0: 学習の失敗図鑑(型⑦)のUIウィジェット
+      ref: 78e3ff5dfff8f851d56c783798a1935bf5167bff # AdGateのProvider PR #28マージ後に正式なSHAへ更新する
   yourwish_kentei:
     git:
       url: https://github.com/zka32101/yourwish_kentei.git

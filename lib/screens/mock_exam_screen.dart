@@ -59,6 +59,7 @@ class _MockExamScreenState extends ConsumerState<MockExamScreen> {
     if (streakCoinMilestones.contains(streakDays)) {
       await ref.read(coinProvider.notifier).grant(CoinEvent.streak(streakDays));
     }
+    await ref.read(adGateProvider).maybeShowInterstitial(InterstitialTrigger.mockExamResult);
     if (!result.passed) return;
     await ref.read(coinProvider.notifier).grant(CoinEvent.mockPass(widget.exam.examId));
     await ref.read(progressProvider.notifier).recordMockResult(passed: true);
@@ -114,14 +115,22 @@ class _MockExamScreenState extends ConsumerState<MockExamScreen> {
 
     final result = _result;
     if (result != null) {
+      final adGate = ref.watch(adGateProvider);
       return Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(24),
-          child: ResultSummary(
-            correct: result.total.score,
-            total: result.total.max,
-            passRatio: level.passRule.totalPct / 100,
-            onRetry: _start,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ResultSummary(
+                correct: result.total.score,
+                total: result.total.max,
+                passRatio: level.passRule.totalPct / 100,
+                onRetry: _start,
+              ),
+              const SizedBox(height: 16),
+              adGate.banner(BannerPlacement.result),
+            ],
           ),
         ),
       );
