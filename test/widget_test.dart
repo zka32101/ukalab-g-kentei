@@ -218,4 +218,26 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('広告非表示を購入済みです'), findsOneWidget);
   });
+
+  testWidgets('用語マップ・AI系譜図を開くと系譜図と用語マップが出て、タップで用語カードが開く', (tester) async {
+    await tester.runAsync(() async {
+      await tester.pumpWidget(await _app());
+      await Future.delayed(const Duration(milliseconds: 300));
+    });
+    await tester.pumpAndSettle();
+
+    await tester.ensureVisible(find.text('用語マップ・AI系譜図'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('用語マップ・AI系譜図'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('AIの歴史（系譜図）'), findsOneWidget);
+    expect(find.text('用語マップ（関連でつながる用語）'), findsOneWidget);
+
+    final node = find.text('生成AI').first;
+    await tester.ensureVisible(node);
+    await tester.tap(node);
+    await tester.pumpAndSettle();
+    expect(find.byType(TermCard), findsOneWidget);
+  });
 }

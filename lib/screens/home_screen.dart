@@ -10,6 +10,7 @@ import 'pace_run_screen.dart';
 import 'predict_run_screen.dart';
 import 'route_planner_screen.dart';
 import 'teach_mascot_screen.dart';
+import 'term_map_screen.dart';
 import 'terms_screen.dart';
 
 /// 「ホーム」タブ。推し・学習コインを表示（決定67〜77）。
@@ -195,6 +196,23 @@ class HomeScreen extends ConsumerWidget {
                   builder: (context) => Scaffold(
                     appBar: AppBar(title: const Text('145問ペース走')),
                     body: PaceRunScreen(questions: questions),
+                  ),
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(height: 16),
+          Card(
+            child: ListTile(
+              leading: const Icon(Icons.hub_outlined),
+              title: const Text('用語マップ・AI系譜図'),
+              subtitle: const Text('関連する用語をつないだ地図と、AIの歴史のタイムラインです。'),
+              trailing: const Icon(Icons.chevron_right),
+              onTap: () => Navigator.of(context).push(
+                MaterialPageRoute<void>(
+                  builder: (context) => Scaffold(
+                    appBar: AppBar(title: const Text('用語マップ・AI系譜図')),
+                    body: TermMapScreen(terms: terms),
                   ),
                 ),
               ),
