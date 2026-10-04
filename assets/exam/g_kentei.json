@@ -20,7 +20,19 @@
       "name": "G検定",
       "questionCount": 145,
       "timeLimitSec": 6000,
-      "passRule": { "totalPct": 70 }
+      "passRule": { "totalPct": 70 },
+      "subjectQuestionCounts": {
+        "ai_intro": 7,
+        "ai_trend": 17,
+        "ml_overview": 19,
+        "dl_overview": 10,
+        "dl_elements": 17,
+        "dl_applications": 24,
+        "ai_social": 10,
+        "math_stats": 12,
+        "ai_law": 15,
+        "ai_ethics": 14
+      }
     }
   ],
   "examDates": []
