@@ -15,11 +15,11 @@ dependencies:
   app_common_kit:
     git:
       url: https://github.com/zka32101/app_common_kit.git
-      ref: 7c8b4f9d3100c27a891804ad8163bf93d9a511f9 # v0.7.0: 全国平均点・偏差値の匿名集計(ExamStatsService)
+      ref: db92a34e59e75f48e6d0985b8b87db77d85bcdbe # v0.7.0: 用語マップ・AI系譜図(TermMapWidget)
   yourwish_kentei:
     git:
       url: https://github.com/zka32101/yourwish_kentei.git
-      ref: 3f8046c25af29a9e4bb8371122a2a8a323aad854 # v0.9.1: 学習の失敗図鑑(型⑦)のモデル・配信前検証
+      ref: 7c22a3b88afce0fcd2dbfa3e33428fbb97ab232e # v0.10.0: Termにera(用語マップ・AI系譜図向け時代区分)
 
   # 状態管理
   flutter_riverpod: ">=2.5.1 <3.0.0"
