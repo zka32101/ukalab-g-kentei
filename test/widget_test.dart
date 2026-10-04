@@ -58,6 +58,8 @@ void main() {
     });
     await tester.pumpAndSettle();
 
+    await tester.ensureVisible(find.text('用語集'));
+    await tester.pumpAndSettle();
     await tester.tap(find.text('用語集'));
     await tester.pumpAndSettle();
     expect(find.text('用語を検索'), findsOneWidget);
@@ -307,5 +309,16 @@ void main() {
     await tester.tap(find.text('決定木'));
     await tester.pumpAndSettle();
     expect(find.text('深さ'), findsOneWidget);
+  });
+
+  testWidgets('ホームに今月のAI動向が表示される', (tester) async {
+    await tester.runAsync(() async {
+      await tester.pumpWidget(await _app());
+      await Future.delayed(const Duration(milliseconds: 300));
+    });
+    await tester.pumpAndSettle();
+
+    expect(find.text('今月のAI動向'), findsOneWidget);
+    expect(find.byType(AiNewsCard), findsOneWidget);
   });
 }

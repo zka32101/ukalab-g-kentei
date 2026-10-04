@@ -30,6 +30,7 @@ class HomeScreen extends ConsumerWidget {
     required this.confusionMatrixScenarios,
     required this.methodChoiceScenarios,
     required this.mlLabDatasets,
+    required this.aiNewsItems,
   });
 
   final ExamConfig exam;
@@ -42,6 +43,7 @@ class HomeScreen extends ConsumerWidget {
   final List<ConfusionMatrixScenario> confusionMatrixScenarios;
   final List<MethodChoiceScenario> methodChoiceScenarios;
   final List<MlLabDataset> mlLabDatasets;
+  final List<AiNewsItem> aiNewsItems;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -63,6 +65,22 @@ class HomeScreen extends ConsumerWidget {
             totalQuestions: questions.length,
             examDate: exam.examDates.isEmpty ? null : exam.examDates.first,
           ),
+          if (aiNewsItems.isNotEmpty) ...[
+            const SizedBox(height: 16),
+            AiNewsCard(
+              items: [
+                for (final n in aiNewsItems)
+                  AiNewsItemSpec(
+                    summary: n.summary,
+                    sourceUrl: n.sourceUrl,
+                    sourceDate: n.sourceDate,
+                    syllabusTag: n.syllabusTag,
+                    asOfDate: n.asOfDate,
+                    isExamRelevant: n.isExamRelevant,
+                  ),
+              ],
+            ),
+          ],
           const SizedBox(height: 16),
           Card(
             child: Padding(
