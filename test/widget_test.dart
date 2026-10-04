@@ -12,7 +12,19 @@ Future<Widget> _app() async => ProviderScope(
       overrides: [
         coinServiceProvider.overrideWithValue(CoinService(store: InMemoryCoinStore())),
         outfitServiceProvider.overrideWithValue(OutfitService(store: InMemoryOutfitStore())),
-        entitlementServiceProvider.overrideWithValue(FakeEntitlementService()),
+        entitlementServiceProvider.overrideWithValue(FakeEntitlementService(
+          availableOffers: const [
+            EntitlementOffer(
+              id: 'noads',
+              productId: 'g_kentei_noads',
+              title: '広告非表示',
+              priceString: '¥480',
+            ),
+          ],
+          grantOnPurchase: const {
+            'g_kentei_noads': EntitlementState(hasNoAds: true),
+          },
+        )),
         adGateProvider.overrideWithValue(await testAdGate()),
       ],
       child: MediaQuery(
@@ -189,5 +201,21 @@ void main() {
     await tester.tap(treatment);
     await tester.pumpAndSettle();
     expect(find.text('わかった!'), findsOneWidget);
+  });
+
+  testWidgets('設定タブで購入すると購入済み表示になる', (tester) async {
+    await tester.runAsync(() async {
+      await tester.pumpWidget(await _app());
+      await Future.delayed(const Duration(milliseconds: 300));
+    });
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('設定'));
+    await tester.pumpAndSettle();
+    expect(find.text('広告非表示'), findsOneWidget);
+
+    await tester.tap(find.text('¥480'));
+    await tester.pumpAndSettle();
+    expect(find.text('広告非表示を購入済みです'), findsOneWidget);
   });
 }

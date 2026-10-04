@@ -39,9 +39,28 @@ void main() async {
   final outfitService = OutfitService(store: SharedPreferencesOutfitStore('g_kentei'));
   await outfitService.load();
 
-  // 課金（RevenueCat）は未着手のため、権利は常に無料として扱う
-  // （noads/premiumの実装後にRevenueCatEntitlementServiceへ差し替える）。
-  final entitlementService = FakeEntitlementService();
+  // 課金（RevenueCat）。実際のAPIキー取得後にRevenueCatEntitlementServiceへ
+  // 差し替える。価格は競合調査を踏まえた暫定値で、運営者確認が必要（決定14）。
+  final entitlementService = FakeEntitlementService(
+    availableOffers: const [
+      EntitlementOffer(
+        id: 'noads',
+        productId: 'g_kentei_noads',
+        title: '広告非表示',
+        priceString: '¥480',
+      ),
+      EntitlementOffer(
+        id: 'premium',
+        productId: 'g_kentei_premium',
+        title: 'プレミアム（広告非表示＋追加機能）',
+        priceString: '¥1,500',
+      ),
+    ],
+    grantOnPurchase: const {
+      'g_kentei_noads': EntitlementState(hasNoAds: true),
+      'g_kentei_premium': EntitlementState(hasPremium: true),
+    },
+  );
 
   // 広告（AdMob、決定35）。noads/premiumの間は何も表示しない。
   final adGate = await AdGate.init(
