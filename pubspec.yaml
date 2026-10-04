@@ -15,11 +15,11 @@ dependencies:
   app_common_kit:
     git:
       url: https://github.com/zka32101/app_common_kit.git
-      ref: 7e6eda0fdb07316dad4726ffd211ebed97e90da8 # feat/confusion-matrix-lab-widget（PR #31マージ後に正式SHAへ更新）
+      ref: 9d84ff43d81f50518373adc94b1f315f858a1886 # v0.7.0: 評価指標ラボ(ConfusionMatrixLabWidget)
   yourwish_kentei:
     git:
       url: https://github.com/zka32101/yourwish_kentei.git
-      ref: 7f8965716d1ff747eaaaf31a766d061956938b99 # feat/confusion-matrix-lab（PR #17マージ後に正式SHAへ更新）
+      ref: ac652d0f941e0d2668074c9ecd208f811dfa3cdc # v0.10.0: 評価指標ラボ(ConfusionMatrixScenario)のモデル・配信前検証
 
   # 状態管理
   flutter_riverpod: ">=2.5.1 <3.0.0"
