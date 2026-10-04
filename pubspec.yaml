@@ -15,7 +15,7 @@ dependencies:
   app_common_kit:
     git:
       url: https://github.com/zka32101/app_common_kit.git
-      ref: fc71ec4a65aabe052efb879ace36a107e8b63dc9 # v0.7.0: AdGateのProvider
+      ref: 199c4efa6975b775402e7cdbe4a8dc53c3891673 # feat/exam-stats-service（PR #29マージ後に正式SHAへ更新）
   yourwish_kentei:
     git:
       url: https://github.com/zka32101/yourwish_kentei.git

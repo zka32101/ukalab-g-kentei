@@ -62,6 +62,7 @@ Future<ProviderContainer> _pump(WidgetTester tester) async {
     coinServiceProvider.overrideWithValue(coin),
     outfitServiceProvider.overrideWithValue(OutfitService(store: InMemoryOutfitStore())),
     adGateProvider.overrideWithValue(await testAdGate()),
+    examStatsServiceProvider.overrideWithValue(FakeExamStatsService()),
   ]);
   addTearDown(container.dispose);
   await tester.pumpWidget(UncontrolledProviderScope(
