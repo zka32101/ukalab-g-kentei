@@ -3,6 +3,7 @@ import 'package:yourwish_kentei/yourwish_kentei.dart';
 
 import '../widgets/oshi_card.dart';
 import 'boundary_screen.dart';
+import 'pace_run_screen.dart';
 import 'predict_run_screen.dart';
 import 'route_planner_screen.dart';
 import 'teach_mascot_screen.dart';
@@ -152,6 +153,23 @@ class HomeScreen extends StatelessWidget {
                     exam: exam,
                     level: exam.levels.first,
                     questions: questions,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(height: 16),
+          Card(
+            child: ListTile(
+              leading: const Icon(Icons.timer_outlined),
+              title: const Text('145問ペース走'),
+              subtitle: const Text('本番のペース感覚を短縮版（20問・14分）で体感します。'),
+              trailing: const Icon(Icons.chevron_right),
+              onTap: () => Navigator.of(context).push(
+                MaterialPageRoute<void>(
+                  builder: (context) => Scaffold(
+                    appBar: AppBar(title: const Text('145問ペース走')),
+                    body: PaceRunScreen(questions: questions),
                   ),
                 ),
               ),

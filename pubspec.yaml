@@ -19,7 +19,7 @@ dependencies:
   yourwish_kentei:
     git:
       url: https://github.com/zka32101/yourwish_kentei.git
-      ref: 30e050169082a303e545835de32fa39363bcf4d1 # v0.9.0: 最短ルートプランナー(型④)
+      ref: 8534e42ea8dd770a04e2be5eb54025d1fb57fca2 # 145問ペース走(型④の直前版) PR #10マージ後に正式なSHAへ更新する
 
   # 状態管理
   flutter_riverpod: ">=2.5.1 <3.0.0"
