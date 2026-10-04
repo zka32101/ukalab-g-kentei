@@ -1,27 +1,88 @@
+import 'package:app_common_kit/app_common_kit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-/// 「設定」タブ。課金・広告・通知の設定は後続（app_common_kit v0.1 の組み込み時）。
-class SettingsScreen extends StatelessWidget {
+/// 「設定」タブ。課金（決定35）の購入・復元を提供する。広告はnoads/premiumの
+/// どちらかを持つと自動的に非表示になる（`AdGate.adsHidden`）。
+class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final entitlement =
+        ref.watch(entitlementStateProvider).valueOrNull ?? EntitlementState.free;
+    final service = ref.watch(entitlementServiceProvider);
+
     return ListView(
       padding: const EdgeInsets.all(16),
-      children: const [
-        ListTile(
+      children: [
+        const ListTile(
           title: Text('このアプリについて'),
           subtitle: Text(
             '「うかラボ G検定」は、一般社団法人日本ディープラーニング協会（JDLA）とは'
             '無関係に開発・運営する非公式の学習アプリです。問題はすべて独自に作成しています。',
           ),
         ),
-        Divider(height: 1),
-        ListTile(
+        const Divider(height: 1),
+        const ListTile(
           title: Text('バージョン'),
           subtitle: Text('0.1.0'),
         ),
+        const Divider(height: 24),
+        const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16),
+          child: Text('購入', style: TextStyle(fontWeight: FontWeight.bold)),
+        ),
+        const SizedBox(height: 8),
+        if (entitlement.adsHidden)
+          ListTile(
+            leading: const Icon(Icons.check_circle, color: Colors.green),
+            title: Text(entitlement.hasPremium ? 'プレミアムを購入済みです' : '広告非表示を購入済みです'),
+          )
+        else
+          FutureBuilder<List<EntitlementOffer>>(
+            future: service.offers(),
+            builder: (context, snapshot) {
+              final offers = snapshot.data ?? const [];
+              if (offers.isEmpty) return const SizedBox.shrink();
+              return Column(
+                children: [
+                  for (final offer in offers)
+                    ListTile(
+                      title: Text(offer.title),
+                      trailing: FilledButton(
+                        onPressed: () => _purchase(context, ref, offer),
+                        child: Text(offer.priceString),
+                      ),
+                    ),
+                ],
+              );
+            },
+          ),
+        TextButton(
+          onPressed: () => _restore(context, ref),
+          child: const Text('購入を復元'),
+        ),
       ],
     );
+  }
+
+  Future<void> _purchase(BuildContext context, WidgetRef ref, EntitlementOffer offer) async {
+    final outcome = await ref.read(entitlementServiceProvider).purchaseOffer(offer.id);
+    if (!context.mounted) return;
+    final message = switch (outcome) {
+      PurchaseOutcome.success => '購入しました。',
+      PurchaseOutcome.cancelled => '購入をキャンセルしました。',
+      PurchaseOutcome.blockedByGate => '購入できませんでした。',
+      PurchaseOutcome.failed => '購入に失敗しました。',
+    };
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+  }
+
+  Future<void> _restore(BuildContext context, WidgetRef ref) async {
+    final state = await ref.read(entitlementServiceProvider).restore();
+    if (!context.mounted) return;
+    final message = state.adsHidden ? '購入を復元しました。' : '復元できる購入がありませんでした。';
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
   }
 }
