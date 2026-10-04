@@ -3,6 +3,8 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:ukalab_g_kentei/data/progress_store.dart';
 import 'package:ukalab_g_kentei/screens/learn_screen.dart';
 import 'package:yourwish_kentei/yourwish_kentei.dart';
 
@@ -51,6 +53,8 @@ Term _term() => const Term(
     );
 
 void main() {
+  setUp(() => SharedPreferences.setMockInitialValues({}));
+
   testWidgets('正解すると学習コインが付与される', (tester) async {
     final coinService = CoinService(store: InMemoryCoinStore());
     await coinService.load();
@@ -72,6 +76,48 @@ void main() {
     await tester.tap(find.text('データが少ない場合'));
     await tester.pumpAndSettle();
     expect(coinService.balance, 1);
+  });
+
+  testWidgets('連続学習7日目は streak のコインも付与される', (tester) async {
+    final coinService = CoinService(store: InMemoryCoinStore());
+    await coinService.load();
+    var now = DateTime(2026, 10, 1);
+    final container = ProviderContainer(overrides: [
+      coinServiceProvider.overrideWithValue(coinService),
+      progressClockProvider.overrideWithValue(() => now),
+    ]);
+    addTearDown(container.dispose);
+
+    await tester.runAsync(() async {
+      for (var i = 0; i < 6; i++) {
+        await container.read(progressProvider.notifier).recordAnswer('seed-$i', correct: true);
+        now = now.add(const Duration(days: 1));
+      }
+    });
+    expect(container.read(progressProvider).streakDays, 6);
+
+    await tester.pumpWidget(UncontrolledProviderScope(
+      container: container,
+      child: MaterialApp(
+        home: Scaffold(
+          body: LearnScreen(
+            questions: [_question(), _question2()],
+            terms: const [],
+            sessionSize: 2,
+          ),
+        ),
+      ),
+    ));
+    await tester.pumpAndSettle();
+
+    await tester.runAsync(() async {
+      await tester.tap(find.text('データが少ない場合'));
+      await Future.delayed(const Duration(milliseconds: 300));
+    });
+    await tester.pumpAndSettle();
+
+    expect(container.read(progressProvider).streakDays, 7);
+    expect(coinService.balance, CoinRules.standard.newQuestion + CoinRules.standard.streak7);
   });
 
   testWidgets('問題文・解説文中の用語をタップすると用語カードが開く', (tester) async {

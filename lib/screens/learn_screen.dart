@@ -41,7 +41,7 @@ class _LearnScreenState extends ConsumerState<LearnScreen> {
     });
   }
 
-  void _select(int i) {
+  Future<void> _select(int i) async {
     if (_answered) return;
     final q = _session.current;
     setState(() {
@@ -51,8 +51,12 @@ class _LearnScreenState extends ConsumerState<LearnScreen> {
     _session.answer(i);
     if (q != null) {
       final correct = i == q.answerIndex;
-      ref.read(progressProvider.notifier).recordAnswer(q.qid, correct: correct);
-      ref.read(coinProvider.notifier).grant(CoinEvent.newQuestion(q.qid));
+      await ref.read(progressProvider.notifier).recordAnswer(q.qid, correct: correct);
+      await ref.read(coinProvider.notifier).grant(CoinEvent.newQuestion(q.qid));
+      final streakDays = ref.read(progressProvider).streakDays;
+      if (streakCoinMilestones.contains(streakDays)) {
+        await ref.read(coinProvider.notifier).grant(CoinEvent.streak(streakDays));
+      }
     }
   }
 
