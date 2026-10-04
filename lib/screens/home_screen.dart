@@ -7,6 +7,7 @@ import '../widgets/oshi_card.dart';
 import 'boundary_screen.dart';
 import 'confusion_matrix_lab_screen.dart';
 import 'failure_gallery_screen.dart';
+import 'method_choice_screen.dart';
 import 'pace_run_screen.dart';
 import 'predict_run_screen.dart';
 import 'route_planner_screen.dart';
@@ -26,6 +27,7 @@ class HomeScreen extends ConsumerWidget {
     required this.misconceptionScenarios,
     required this.failureCases,
     required this.confusionMatrixScenarios,
+    required this.methodChoiceScenarios,
   });
 
   final ExamConfig exam;
@@ -36,6 +38,7 @@ class HomeScreen extends ConsumerWidget {
   final List<MisconceptionScenario> misconceptionScenarios;
   final List<FailureCase> failureCases;
   final List<ConfusionMatrixScenario> confusionMatrixScenarios;
+  final List<MethodChoiceScenario> methodChoiceScenarios;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -182,6 +185,25 @@ class HomeScreen extends ConsumerWidget {
                     builder: (context) => Scaffold(
                       appBar: AppBar(title: const Text('評価指標ラボ')),
                       body: ConfusionMatrixLabScreen(scenarios: confusionMatrixScenarios),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+          if (methodChoiceScenarios.isNotEmpty) ...[
+            const SizedBox(height: 16),
+            Card(
+              child: ListTile(
+                leading: const Icon(Icons.rule_folder_outlined),
+                title: const Text('手法の選び方'),
+                subtitle: const Text('事例に対して、適切な手法・モデル・評価指標を選びます。'),
+                trailing: const Icon(Icons.chevron_right),
+                onTap: () => Navigator.of(context).push(
+                  MaterialPageRoute<void>(
+                    builder: (context) => Scaffold(
+                      appBar: AppBar(title: const Text('手法の選び方')),
+                      body: MethodChoiceScreen(scenarios: methodChoiceScenarios),
                     ),
                   ),
                 ),

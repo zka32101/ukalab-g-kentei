@@ -264,4 +264,27 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('わかった!'), findsOneWidget);
   });
+
+  testWidgets('手法の選び方を開いて正しい手法を選ぶと解説が出る', (tester) async {
+    await tester.runAsync(() async {
+      await tester.pumpWidget(await _app());
+      await Future.delayed(const Duration(milliseconds: 300));
+    });
+    await tester.pumpAndSettle();
+
+    await tester.ensureVisible(find.text('手法の選び方'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('手法の選び方'));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('顧客の離脱予測'));
+    await tester.pumpAndSettle();
+    expect(find.byType(MethodChoiceWidget), findsOneWidget);
+
+    final choice = find.text('分類（教師あり学習）');
+    await tester.ensureVisible(choice);
+    await tester.tap(choice);
+    await tester.pumpAndSettle();
+    expect(find.text('わかった!'), findsOneWidget);
+  });
 }
