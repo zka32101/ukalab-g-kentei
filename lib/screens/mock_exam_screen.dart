@@ -53,7 +53,12 @@ class _MockExamScreenState extends ConsumerState<MockExamScreen> {
     final result = scoreMockExam(questions: _picked, answers: _answers, rule: rule);
     setState(() => _result = result);
 
+    await ref.read(progressProvider.notifier).touchStudyDay();
     await ref.read(coinProvider.notifier).grant(CoinEvent.mockDone());
+    final streakDays = ref.read(progressProvider).streakDays;
+    if (streakCoinMilestones.contains(streakDays)) {
+      await ref.read(coinProvider.notifier).grant(CoinEvent.streak(streakDays));
+    }
     if (!result.passed) return;
     await ref.read(coinProvider.notifier).grant(CoinEvent.mockPass(widget.exam.examId));
     await ref.read(progressProvider.notifier).recordMockResult(passed: true);

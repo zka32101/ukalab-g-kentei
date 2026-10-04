@@ -88,8 +88,13 @@ class _OshiCardState extends ConsumerState<OshiCard> {
     final theme = Theme.of(context);
     final coin = ref.watch(coinProvider);
     final now = DateTime.now();
-    final examPhase = MascotDayState(examDate: widget.examDate).examPhase(now);
     final progress = ref.watch(progressProvider);
+    final day = MascotDayState(
+      examDate: widget.examDate,
+      studiedToday: progress.lastStudyDay == studyDayKey(now),
+      streakDays: progress.streakDays,
+    );
+    final examPhase = day.examPhase(now);
     final stage = oshiStageFor(
       distinctAnswered: progress.distinctAnswered,
       totalQuestions: widget.totalQuestions,
@@ -133,9 +138,6 @@ class _OshiCardState extends ConsumerState<OshiCard> {
       );
     }
 
-    // 連続学習日数・最終学習日は後続（間隔反復・学習記録）で対応するため、
-    // 現時点では常に「未設定」として扱う。
-    final day = MascotDayState(examDate: widget.examDate);
     final situation = switch (examPhase) {
       ExamPhase.today => MascotSituation.examToday,
       ExamPhase.eve => MascotSituation.examEve,
@@ -175,6 +177,8 @@ class _OshiCardState extends ConsumerState<OshiCard> {
                   ),
                   const SizedBox(height: 4),
                   Text('学習コイン ${coin.balance}', style: theme.textTheme.labelMedium),
+                  const SizedBox(height: 4),
+                  StreakBadge(days: progress.streakDays),
                 ],
               ),
             ),
