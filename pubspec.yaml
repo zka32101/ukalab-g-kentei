@@ -15,11 +15,11 @@ dependencies:
   app_common_kit:
     git:
       url: https://github.com/zka32101/app_common_kit.git
-      ref: db0b4f5ee23eb25cb1d5fcf6f0c5d0d7bbac66b3 # v0.7.0: RoutePlannerWidget
+      ref: 2e1a2b2d444acdf7a51d42c0bf9f869d6e9f877a # v0.7.0: 学習の失敗図鑑(型⑦)のUIウィジェット
   yourwish_kentei:
     git:
       url: https://github.com/zka32101/yourwish_kentei.git
-      ref: 3965dfd180a9b8d27a627727a9acb77c7f36a11f # v0.9.0: 145問ペース走(型④の直前版)
+      ref: 3f8046c25af29a9e4bb8371122a2a8a323aad854 # v0.9.1: 学習の失敗図鑑(型⑦)のモデル・配信前検証
 
   # 状態管理
   flutter_riverpod: ">=2.5.1 <3.0.0"

@@ -5,8 +5,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: db0b4f5ee23eb25cb1d5fcf6f0c5d0d7bbac66b3
-      resolved-ref: db0b4f5ee23eb25cb1d5fcf6f0c5d0d7bbac66b3
+      ref: "2e1a2b2d444acdf7a51d42c0bf9f869d6e9f877a"
+      resolved-ref: "2e1a2b2d444acdf7a51d42c0bf9f869d6e9f877a"
       url: "https://github.com/zka32101/app_common_kit.git"
     source: git
     version: "0.7.0"
@@ -458,8 +458,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: "3965dfd180a9b8d27a627727a9acb77c7f36a11f"
-      resolved-ref: "3965dfd180a9b8d27a627727a9acb77c7f36a11f"
+      ref: "3f8046c25af29a9e4bb8371122a2a8a323aad854"
+      resolved-ref: "3f8046c25af29a9e4bb8371122a2a8a323aad854"
       url: "https://github.com/zka32101/yourwish_kentei.git"
     source: git
     version: "0.9.1"
