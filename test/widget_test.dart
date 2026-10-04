@@ -287,4 +287,25 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('わかった!'), findsOneWidget);
   });
+
+  testWidgets('機械学習ラボを開いて手法を切り替えられる', (tester) async {
+    await tester.runAsync(() async {
+      await tester.pumpWidget(await _app());
+      await Future.delayed(const Duration(milliseconds: 300));
+    });
+    await tester.pumpAndSettle();
+
+    await tester.ensureVisible(find.text('機械学習ラボ'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('機械学習ラボ'));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('XORパターン（線形分離できない例）'));
+    await tester.pumpAndSettle();
+    expect(find.byType(MlLabWidget), findsOneWidget);
+
+    await tester.tap(find.text('決定木'));
+    await tester.pumpAndSettle();
+    expect(find.text('深さ'), findsOneWidget);
+  });
 }

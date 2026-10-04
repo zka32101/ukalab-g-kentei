@@ -8,6 +8,7 @@ import 'boundary_screen.dart';
 import 'confusion_matrix_lab_screen.dart';
 import 'failure_gallery_screen.dart';
 import 'method_choice_screen.dart';
+import 'ml_lab_screen.dart';
 import 'pace_run_screen.dart';
 import 'predict_run_screen.dart';
 import 'route_planner_screen.dart';
@@ -28,6 +29,7 @@ class HomeScreen extends ConsumerWidget {
     required this.failureCases,
     required this.confusionMatrixScenarios,
     required this.methodChoiceScenarios,
+    required this.mlLabDatasets,
   });
 
   final ExamConfig exam;
@@ -39,6 +41,7 @@ class HomeScreen extends ConsumerWidget {
   final List<FailureCase> failureCases;
   final List<ConfusionMatrixScenario> confusionMatrixScenarios;
   final List<MethodChoiceScenario> methodChoiceScenarios;
+  final List<MlLabDataset> mlLabDatasets;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -204,6 +207,25 @@ class HomeScreen extends ConsumerWidget {
                     builder: (context) => Scaffold(
                       appBar: AppBar(title: const Text('手法の選び方')),
                       body: MethodChoiceScreen(scenarios: methodChoiceScenarios),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+          if (mlLabDatasets.isNotEmpty) ...[
+            const SizedBox(height: 16),
+            Card(
+              child: ListTile(
+                leading: const Icon(Icons.scatter_plot_outlined),
+                title: const Text('機械学習ラボ'),
+                subtitle: const Text('k近傍法・決定木・線形分類の境界を見て、過学習・未学習を体験します。'),
+                trailing: const Icon(Icons.chevron_right),
+                onTap: () => Navigator.of(context).push(
+                  MaterialPageRoute<void>(
+                    builder: (context) => Scaffold(
+                      appBar: AppBar(title: const Text('機械学習ラボ')),
+                      body: MlLabScreen(datasets: mlLabDatasets),
                     ),
                   ),
                 ),
