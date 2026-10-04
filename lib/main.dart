@@ -69,12 +69,17 @@ void main() async {
     isRelease: kReleaseMode,
   );
 
+  // 全国平均点・偏差値の匿名集計（決定32）。Firebaseプロジェクトを取得後、
+  // FirebaseExamStatsService へ差し替える（firebase_core の初期化が必要）。
+  final examStatsService = FakeExamStatsService();
+
   final container = ProviderContainer(
     overrides: [
       coinServiceProvider.overrideWithValue(coinService),
       outfitServiceProvider.overrideWithValue(outfitService),
       entitlementServiceProvider.overrideWithValue(entitlementService),
       adGateProvider.overrideWithValue(adGate),
+      examStatsServiceProvider.overrideWithValue(examStatsService),
     ],
   );
 

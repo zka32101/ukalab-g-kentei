@@ -26,6 +26,7 @@ Future<Widget> _app() async => ProviderScope(
           },
         )),
         adGateProvider.overrideWithValue(await testAdGate()),
+        examStatsServiceProvider.overrideWithValue(FakeExamStatsService()),
       ],
       child: MediaQuery(
         data: const MediaQueryData(disableAnimations: true),

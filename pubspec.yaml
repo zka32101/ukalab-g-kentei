@@ -15,11 +15,11 @@ dependencies:
   app_common_kit:
     git:
       url: https://github.com/zka32101/app_common_kit.git
-      ref: 3dd37050c82c818733b12e61a2457f3f9fc37b2b # feat/term-map-widget（PR #30マージ後に正式SHAへ更新）
+      ref: db92a34e59e75f48e6d0985b8b87db77d85bcdbe # v0.7.0: 用語マップ・AI系譜図(TermMapWidget)
   yourwish_kentei:
     git:
       url: https://github.com/zka32101/yourwish_kentei.git
-      ref: 9d7c2b0ad06304d3cc0d11e5e5501968af292d2b # feat/term-era（PR #15マージ後に正式SHAへ更新）
+      ref: 7c22a3b88afce0fcd2dbfa3e33428fbb97ab232e # v0.10.0: Termにera(用語マップ・AI系譜図向け時代区分)
 
   # 状態管理
   flutter_riverpod: ">=2.5.1 <3.0.0"

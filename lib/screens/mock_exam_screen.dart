@@ -22,12 +22,17 @@ class MockExamScreen extends ConsumerStatefulWidget {
   ConsumerState<MockExamScreen> createState() => _MockExamScreenState();
 }
 
+/// 全国集計(決定32)の examVersion。出題配分(subjectQuestionCounts)を変えたら
+/// 上げる（配分が違う回を同じ集計に混ぜないため）。
+const _examStatsVersion = 'v1';
+
 class _MockExamScreenState extends ConsumerState<MockExamScreen> {
   bool _started = false;
   int _index = 0;
   final Map<String, int?> _answers = {};
   late List<Question> _picked;
   MockExamResult? _result;
+  ExamStatsSummary? _statsSummary;
 
   void _start() {
     final level = widget.exam.levels.first;
@@ -41,6 +46,7 @@ class _MockExamScreenState extends ConsumerState<MockExamScreen> {
       _index = 0;
       _started = true;
       _result = null;
+      _statsSummary = null;
     });
   }
 
@@ -60,6 +66,21 @@ class _MockExamScreenState extends ConsumerState<MockExamScreen> {
       await ref.read(coinProvider.notifier).grant(CoinEvent.streak(streakDays));
     }
     await ref.read(adGateProvider).maybeShowInterstitial(InterstitialTrigger.mockExamResult);
+
+    final stats = ref.read(examStatsServiceProvider);
+    final submission = ExamStatsSubmission(
+      certId: widget.exam.examId,
+      examVersion: _examStatsVersion,
+      score: result.total.score,
+      totalQuestions: result.total.max,
+    );
+    await stats.submitResult(submission);
+    final summary = await stats.fetchSummary(
+      certId: widget.exam.examId,
+      examVersion: _examStatsVersion,
+    );
+    if (mounted) setState(() => _statsSummary = summary);
+
     if (!result.passed) return;
     await ref.read(coinProvider.notifier).grant(CoinEvent.mockPass(widget.exam.examId));
     await ref.read(progressProvider.notifier).recordMockResult(passed: true);
@@ -128,6 +149,8 @@ class _MockExamScreenState extends ConsumerState<MockExamScreen> {
                 passRatio: level.passRule.totalPct / 100,
                 onRetry: _start,
               ),
+              const SizedBox(height: 16),
+              StatsCompareWidget(summary: _statsSummary, myScore: result.total.score),
               const SizedBox(height: 16),
               adGate.banner(BannerPlacement.result),
             ],
