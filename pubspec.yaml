@@ -15,11 +15,11 @@ dependencies:
   app_common_kit:
     git:
       url: https://github.com/zka32101/app_common_kit.git
-      ref: db92a34e59e75f48e6d0985b8b87db77d85bcdbe # v0.7.0: 用語マップ・AI系譜図(TermMapWidget)
+      ref: 7e6eda0fdb07316dad4726ffd211ebed97e90da8 # feat/confusion-matrix-lab-widget（PR #31マージ後に正式SHAへ更新）
   yourwish_kentei:
     git:
       url: https://github.com/zka32101/yourwish_kentei.git
-      ref: 7c22a3b88afce0fcd2dbfa3e33428fbb97ab232e # v0.10.0: Termにera(用語マップ・AI系譜図向け時代区分)
+      ref: 7f8965716d1ff747eaaaf31a766d061956938b99 # feat/confusion-matrix-lab（PR #17マージ後に正式SHAへ更新）
 
   # 状態管理
   flutter_riverpod: ">=2.5.1 <3.0.0"

@@ -15,6 +15,7 @@ class ExamData {
     required this.predictRunScenarios,
     required this.misconceptionScenarios,
     required this.failureCases,
+    required this.confusionMatrixScenarios,
   });
 
   final ExamConfig exam;
@@ -32,6 +33,9 @@ class ExamData {
 
   /// 学習の失敗図鑑（型⑦、決定76）の症例一覧。
   final List<FailureCase> failureCases;
+
+  /// 評価指標ラボ（画期的な機能3）の場面一覧。
+  final List<ConfusionMatrixScenario> confusionMatrixScenarios;
 
   List<Question> get activeQuestions =>
       questions.where((q) => !q.disabled).toList();
@@ -75,6 +79,11 @@ Future<ExamData> loadExamData() async {
       .loadString('assets/experience/failure_gallery_g_kentei.jsonl');
   final parsedFailure = parseFailureCasesJsonl(failureJsonl);
 
+  final confusionMatrixJsonl = await rootBundle
+      .loadString('assets/experience/confusion_matrix_lab_g_kentei.jsonl');
+  final parsedConfusionMatrix =
+      parseConfusionMatrixScenariosJsonl(confusionMatrixJsonl);
+
   final issues = [
     ...parsed.issues,
     ...validateQuestions(parsed.questions, exam: exam),
@@ -88,6 +97,8 @@ Future<ExamData> loadExamData() async {
     ...validateMisconceptionScenarios(parsedMisconception.scenarios, exam: exam),
     ...parsedFailure.issues,
     ...validateFailureCases(parsedFailure.cases, exam: exam),
+    ...parsedConfusionMatrix.issues,
+    ...validateConfusionMatrixScenarios(parsedConfusionMatrix.scenarios, exam: exam),
   ];
   if (issues.isNotEmpty) {
     throw StateError('問題・用語データに不備があります: ${issues.first}');
@@ -100,6 +111,7 @@ Future<ExamData> loadExamData() async {
     predictRunScenarios: parsedPredict.scenarios,
     misconceptionScenarios: parsedMisconception.scenarios,
     failureCases: parsedFailure.cases,
+    confusionMatrixScenarios: parsedConfusionMatrix.scenarios,
   );
 }
 

@@ -5,6 +5,7 @@ import 'package:yourwish_kentei/yourwish_kentei.dart';
 
 import '../widgets/oshi_card.dart';
 import 'boundary_screen.dart';
+import 'confusion_matrix_lab_screen.dart';
 import 'failure_gallery_screen.dart';
 import 'pace_run_screen.dart';
 import 'predict_run_screen.dart';
@@ -24,6 +25,7 @@ class HomeScreen extends ConsumerWidget {
     required this.predictRunScenarios,
     required this.misconceptionScenarios,
     required this.failureCases,
+    required this.confusionMatrixScenarios,
   });
 
   final ExamConfig exam;
@@ -33,6 +35,7 @@ class HomeScreen extends ConsumerWidget {
   final List<PredictRunScenario> predictRunScenarios;
   final List<MisconceptionScenario> misconceptionScenarios;
   final List<FailureCase> failureCases;
+  final List<ConfusionMatrixScenario> confusionMatrixScenarios;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -160,6 +163,25 @@ class HomeScreen extends ConsumerWidget {
                     builder: (context) => Scaffold(
                       appBar: AppBar(title: const Text('学習の失敗図鑑')),
                       body: FailureGalleryScreen(cases: failureCases),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+          if (confusionMatrixScenarios.isNotEmpty) ...[
+            const SizedBox(height: 16),
+            Card(
+              child: ListTile(
+                leading: const Icon(Icons.grid_on_outlined),
+                title: const Text('評価指標ラボ'),
+                subtitle: const Text('混同行列を動かして、正解率・適合率・再現率・F値の連動を体験します。'),
+                trailing: const Icon(Icons.chevron_right),
+                onTap: () => Navigator.of(context).push(
+                  MaterialPageRoute<void>(
+                    builder: (context) => Scaffold(
+                      appBar: AppBar(title: const Text('評価指標ラボ')),
+                      body: ConfusionMatrixLabScreen(scenarios: confusionMatrixScenarios),
                     ),
                   ),
                 ),
