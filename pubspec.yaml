@@ -15,11 +15,11 @@ dependencies:
   app_common_kit:
     git:
       url: https://github.com/zka32101/app_common_kit.git
-      ref: 77f56ef76c6069d641f68c071878e1e80a7f62cf # feat/method-choice-widget（PR #33マージ後に正式SHAへ更新）
+      ref: 101532174ef5e4a08ea15d256667409aeff04f65 # v0.8.0: 手法の選び方(MethodChoiceWidget)
   yourwish_kentei:
     git:
       url: https://github.com/zka32101/yourwish_kentei.git
-      ref: 434b978c5ec2b5204b9684ea6ec4d39ecdb28e67 # feat/method-choice（PR #18マージ後に正式SHAへ更新）
+      ref: 585ef5f733eec16d2c3fe1c230a9771f64d45148 # v0.10.0: 手法の選び方(MethodChoiceScenario)のモデル・配信前検証
 
   # 状態管理
   flutter_riverpod: ">=2.5.1 <3.0.0"
