@@ -156,4 +156,34 @@ void main() {
 
     expect(find.text('ペース走を始める'), findsOneWidget);
   });
+
+  testWidgets('学習の失敗図鑑を開いて症状・処方に正解すると解説が出る', (tester) async {
+    await tester.runAsync(() async {
+      await tester.pumpWidget(_app());
+      await Future.delayed(const Duration(milliseconds: 300));
+    });
+    await tester.pumpAndSettle();
+
+    await tester.ensureVisible(find.text('学習の失敗図鑑'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('学習の失敗図鑑'));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('症例1'));
+    await tester.pumpAndSettle();
+    expect(find.byType(FailureGalleryWidget), findsOneWidget);
+    expect(find.text('この学習曲線の症状は?'), findsOneWidget);
+
+    final symptom = find.widgetWithText(ChoiceChip, '過学習');
+    await tester.ensureVisible(symptom);
+    await tester.tap(symptom);
+    await tester.pumpAndSettle();
+    expect(find.text('この症状への処方は?'), findsOneWidget);
+
+    final treatment = find.widgetWithText(ChoiceChip, '正則化(Dropoutなど)を強める、またはデータを増やす');
+    await tester.ensureVisible(treatment);
+    await tester.tap(treatment);
+    await tester.pumpAndSettle();
+    expect(find.text('わかった!'), findsOneWidget);
+  });
 }

@@ -3,6 +3,7 @@ import 'package:yourwish_kentei/yourwish_kentei.dart';
 
 import '../widgets/oshi_card.dart';
 import 'boundary_screen.dart';
+import 'failure_gallery_screen.dart';
 import 'pace_run_screen.dart';
 import 'predict_run_screen.dart';
 import 'route_planner_screen.dart';
@@ -19,6 +20,7 @@ class HomeScreen extends StatelessWidget {
     required this.boundaryScenarios,
     required this.predictRunScenarios,
     required this.misconceptionScenarios,
+    required this.failureCases,
   });
 
   final ExamConfig exam;
@@ -27,6 +29,7 @@ class HomeScreen extends StatelessWidget {
   final List<BoundaryScenario> boundaryScenarios;
   final List<PredictRunScenario> predictRunScenarios;
   final List<MisconceptionScenario> misconceptionScenarios;
+  final List<FailureCase> failureCases;
 
   @override
   Widget build(BuildContext context) {
@@ -134,6 +137,25 @@ class HomeScreen extends StatelessWidget {
                     builder: (context) => Scaffold(
                       appBar: AppBar(title: const Text('推しの答案を添削')),
                       body: TeachMascotScreen(scenarios: misconceptionScenarios),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+          if (failureCases.isNotEmpty) ...[
+            const SizedBox(height: 16),
+            Card(
+              child: ListTile(
+                leading: const Icon(Icons.show_chart_outlined),
+                title: const Text('学習の失敗図鑑'),
+                subtitle: const Text('学習曲線を見て症状を当て、処方（対策）を選びます。'),
+                trailing: const Icon(Icons.chevron_right),
+                onTap: () => Navigator.of(context).push(
+                  MaterialPageRoute<void>(
+                    builder: (context) => Scaffold(
+                      appBar: AppBar(title: const Text('学習の失敗図鑑')),
+                      body: FailureGalleryScreen(cases: failureCases),
                     ),
                   ),
                 ),
