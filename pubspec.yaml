@@ -15,11 +15,11 @@ dependencies:
   app_common_kit:
     git:
       url: https://github.com/zka32101/app_common_kit.git
-      ref: 37e5f3f33a4c95a9fc3ef3ac86832c263347f5fe # 学習の失敗図鑑(型⑦) PR #27マージ後に正式なSHAへ更新する
+      ref: 2e1a2b2d444acdf7a51d42c0bf9f869d6e9f877a # v0.7.0: 学習の失敗図鑑(型⑦)のUIウィジェット
   yourwish_kentei:
     git:
       url: https://github.com/zka32101/yourwish_kentei.git
-      ref: 886ccd738ece4cbbab1d611790d60f7640c58551 # 学習の失敗図鑑(型⑦) PR #12マージ後に正式なSHAへ更新する
+      ref: 3f8046c25af29a9e4bb8371122a2a8a323aad854 # v0.9.1: 学習の失敗図鑑(型⑦)のモデル・配信前検証
 
   # 状態管理
   flutter_riverpod: ">=2.5.1 <3.0.0"
