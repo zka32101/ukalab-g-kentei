@@ -241,4 +241,27 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.byType(TermCard), findsOneWidget);
   });
+
+  testWidgets('評価指標ラボを開いて場面の選択肢に正解すると解説が出る', (tester) async {
+    await tester.runAsync(() async {
+      await tester.pumpWidget(await _app());
+      await Future.delayed(const Duration(milliseconds: 300));
+    });
+    await tester.pumpAndSettle();
+
+    await tester.ensureVisible(find.text('評価指標ラボ'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('評価指標ラボ'));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('がん検診'));
+    await tester.pumpAndSettle();
+    expect(find.byType(ConfusionMatrixLabWidget), findsOneWidget);
+
+    final choice = find.text('再現率を優先する（見逃しを減らす）');
+    await tester.ensureVisible(choice);
+    await tester.tap(choice);
+    await tester.pumpAndSettle();
+    expect(find.text('わかった!'), findsOneWidget);
+  });
 }
