@@ -6,6 +6,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ukalab_g_kentei/screens/mock_exam_screen.dart';
 import 'package:yourwish_kentei/yourwish_kentei.dart';
 
+import 'test_support.dart';
+
 final exam = ExamConfig.fromJson({
   'examId': 'g_kentei',
   'name': 'テスト',
@@ -59,6 +61,7 @@ Future<ProviderContainer> _pump(WidgetTester tester) async {
   final container = ProviderContainer(overrides: [
     coinServiceProvider.overrideWithValue(coin),
     outfitServiceProvider.overrideWithValue(OutfitService(store: InMemoryOutfitStore())),
+    adGateProvider.overrideWithValue(await testAdGate()),
   ]);
   addTearDown(container.dispose);
   await tester.pumpWidget(UncontrolledProviderScope(

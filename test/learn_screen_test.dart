@@ -8,6 +8,8 @@ import 'package:ukalab_g_kentei/data/progress_store.dart';
 import 'package:ukalab_g_kentei/screens/learn_screen.dart';
 import 'package:yourwish_kentei/yourwish_kentei.dart';
 
+import 'test_support.dart';
+
 Question _question() => const Question(
       qid: 'q1',
       examId: 'g_kentei',
@@ -59,7 +61,10 @@ void main() {
     final coinService = CoinService(store: InMemoryCoinStore());
     await coinService.load();
     await tester.pumpWidget(ProviderScope(
-      overrides: [coinServiceProvider.overrideWithValue(coinService)],
+      overrides: [
+        coinServiceProvider.overrideWithValue(coinService),
+        adGateProvider.overrideWithValue(await testAdGate()),
+      ],
       child: MaterialApp(
         home: Scaffold(
           body: LearnScreen(
@@ -85,6 +90,7 @@ void main() {
     final container = ProviderContainer(overrides: [
       coinServiceProvider.overrideWithValue(coinService),
       progressClockProvider.overrideWithValue(() => now),
+      adGateProvider.overrideWithValue(await testAdGate()),
     ]);
     addTearDown(container.dispose);
 
@@ -124,6 +130,7 @@ void main() {
     await tester.pumpWidget(ProviderScope(
       overrides: [
         coinServiceProvider.overrideWithValue(CoinService(store: InMemoryCoinStore())),
+        adGateProvider.overrideWithValue(await testAdGate()),
       ],
       child: MaterialApp(
         theme: UkalabTheme.light(field: UkalabField.ai, cert: UkalabCert.gKentei),

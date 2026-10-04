@@ -4,12 +4,16 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:ukalab_g_kentei/main.dart';
 
+import 'test_support.dart';
+
 // MascotWidget は animate: true が既定のため、disableAnimations なしでは
 // アニメーションが回り続けて pumpAndSettle がタイムアウトする。
-Widget _app() => ProviderScope(
+Future<Widget> _app() async => ProviderScope(
       overrides: [
         coinServiceProvider.overrideWithValue(CoinService(store: InMemoryCoinStore())),
         outfitServiceProvider.overrideWithValue(OutfitService(store: InMemoryOutfitStore())),
+        entitlementServiceProvider.overrideWithValue(FakeEntitlementService()),
+        adGateProvider.overrideWithValue(await testAdGate()),
       ],
       child: MediaQuery(
         data: const MediaQueryData(disableAnimations: true),
@@ -23,7 +27,7 @@ void main() {
     // fake async のタイミングと競合してタイムアウトすることがある。
     // runAsync で実際の非同期ガップを許可してから反映させる。
     await tester.runAsync(() async {
-      await tester.pumpWidget(_app());
+      await tester.pumpWidget(await _app());
       await Future.delayed(const Duration(milliseconds: 300));
     });
     await tester.pumpAndSettle();
@@ -36,7 +40,7 @@ void main() {
 
   testWidgets('用語集を開いて検索し、用語カードが開く', (tester) async {
     await tester.runAsync(() async {
-      await tester.pumpWidget(_app());
+      await tester.pumpWidget(await _app());
       await Future.delayed(const Duration(milliseconds: 300));
     });
     await tester.pumpAndSettle();
@@ -63,7 +67,7 @@ void main() {
 
   testWidgets('境界線スライダーを開いて条件を切り替えると判定が変わる', (tester) async {
     await tester.runAsync(() async {
-      await tester.pumpWidget(_app());
+      await tester.pumpWidget(await _app());
       await Future.delayed(const Duration(milliseconds: 300));
     });
     await tester.pumpAndSettle();
@@ -84,7 +88,7 @@ void main() {
 
   testWidgets('予測→実行を開いて予測すると正解とのズレが出る', (tester) async {
     await tester.runAsync(() async {
-      await tester.pumpWidget(_app());
+      await tester.pumpWidget(await _app());
       await Future.delayed(const Duration(milliseconds: 300));
     });
     await tester.pumpAndSettle();
@@ -106,7 +110,7 @@ void main() {
 
   testWidgets('推しの答案を添削を開いて正解をタップすると解説が出る', (tester) async {
     await tester.runAsync(() async {
-      await tester.pumpWidget(_app());
+      await tester.pumpWidget(await _app());
       await Future.delayed(const Duration(milliseconds: 300));
     });
     await tester.pumpAndSettle();
@@ -128,7 +132,7 @@ void main() {
 
   testWidgets('最短ルートプランナーを開くと今日やる3つが出る', (tester) async {
     await tester.runAsync(() async {
-      await tester.pumpWidget(_app());
+      await tester.pumpWidget(await _app());
       await Future.delayed(const Duration(milliseconds: 300));
     });
     await tester.pumpAndSettle();
@@ -144,7 +148,7 @@ void main() {
 
   testWidgets('145問ペース走を開くと説明と開始ボタンが出る', (tester) async {
     await tester.runAsync(() async {
-      await tester.pumpWidget(_app());
+      await tester.pumpWidget(await _app());
       await Future.delayed(const Duration(milliseconds: 300));
     });
     await tester.pumpAndSettle();
@@ -159,7 +163,7 @@ void main() {
 
   testWidgets('学習の失敗図鑑を開いて症状・処方に正解すると解説が出る', (tester) async {
     await tester.runAsync(() async {
-      await tester.pumpWidget(_app());
+      await tester.pumpWidget(await _app());
       await Future.delayed(const Duration(milliseconds: 300));
     });
     await tester.pumpAndSettle();
