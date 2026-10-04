@@ -141,4 +141,19 @@ void main() {
     expect(find.byType(RoutePlannerWidget), findsOneWidget);
     expect(find.text('今日やる3つ'), findsOneWidget);
   });
+
+  testWidgets('145問ペース走を開くと説明と開始ボタンが出る', (tester) async {
+    await tester.runAsync(() async {
+      await tester.pumpWidget(_app());
+      await Future.delayed(const Duration(milliseconds: 300));
+    });
+    await tester.pumpAndSettle();
+
+    await tester.ensureVisible(find.text('145問ペース走'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('145問ペース走'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('ペース走を始める'), findsOneWidget);
+  });
 }
