@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:yourwish_kentei/yourwish_kentei.dart';
 
 import '../widgets/oshi_card.dart';
+import 'ai_project_screen.dart';
 import 'attention_viz_screen.dart';
 import 'boundary_screen.dart';
 import 'confusion_matrix_lab_screen.dart';
@@ -39,6 +40,7 @@ class HomeScreen extends ConsumerWidget {
     required this.attentionVizScenarios,
     required this.nnBuilderDatasets,
     required this.ethicsCaseScenarios,
+    required this.storyScenarios,
   });
 
   final ExamConfig exam;
@@ -56,6 +58,7 @@ class HomeScreen extends ConsumerWidget {
   final List<AttentionVizScenario> attentionVizScenarios;
   final List<NnBuilderDataset> nnBuilderDatasets;
   final List<EthicsCaseScenario> ethicsCaseScenarios;
+  final List<StoryScenario> storyScenarios;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -332,6 +335,25 @@ class HomeScreen extends ConsumerWidget {
                     builder: (context) => Scaffold(
                       appBar: AppBar(title: const Text('AI倫理ケース')),
                       body: EthicsCaseScreen(scenarios: ethicsCaseScenarios),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+          if (storyScenarios.isNotEmpty) ...[
+            const SizedBox(height: 16),
+            Card(
+              child: ListTile(
+                leading: const Icon(Icons.auto_graph_outlined),
+                title: const Text('AIプロジェクト経営モード'),
+                subtitle: const Text('架空の会社でAI導入を進め、データ収集から運用・倫理審査まで判断します。'),
+                trailing: const Icon(Icons.chevron_right),
+                onTap: () => Navigator.of(context).push(
+                  MaterialPageRoute<void>(
+                    builder: (context) => Scaffold(
+                      appBar: AppBar(title: const Text('AIプロジェクト経営モード')),
+                      body: AiProjectScreen(scenarios: storyScenarios),
                     ),
                   ),
                 ),

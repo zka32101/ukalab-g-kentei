@@ -23,6 +23,7 @@ class ExamData {
     required this.attentionVizScenarios,
     required this.nnBuilderDatasets,
     required this.ethicsCaseScenarios,
+    required this.storyScenarios,
   });
 
   final ExamConfig exam;
@@ -64,6 +65,9 @@ class ExamData {
 
   /// AI倫理ケース（画期的な機能7）の場面一覧。
   final List<EthicsCaseScenario> ethicsCaseScenarios;
+
+  /// AIプロジェクト経営モード（画期的な機能8、ストーリー型）のシナリオ一覧。
+  final List<StoryScenario> storyScenarios;
 
   List<Question> get activeQuestions =>
       questions.where((q) => !q.disabled).toList();
@@ -137,6 +141,10 @@ Future<ExamData> loadExamData() async {
       await rootBundle.loadString('assets/experience/ethics_case_g_kentei.jsonl');
   final parsedEthicsCase = parseEthicsCaseScenariosJsonl(ethicsCaseJsonl);
 
+  final storyJsonl =
+      await rootBundle.loadString('assets/experience/story_mode_g_kentei.jsonl');
+  final parsedStory = parseStoryScenariosJsonl(storyJsonl);
+
   final issues = [
     ...parsed.issues,
     ...validateQuestions(parsed.questions, exam: exam),
@@ -170,6 +178,8 @@ Future<ExamData> loadExamData() async {
     ...validateNnBuilderDatasets(parsedNnBuilder.datasets, exam: exam),
     ...parsedEthicsCase.issues,
     ...validateEthicsCaseScenarios(parsedEthicsCase.scenarios, exam: exam),
+    ...parsedStory.issues,
+    ...validateStoryScenarios(parsedStory.scenarios, exam: exam),
   ];
   if (issues.isNotEmpty) {
     throw StateError('問題・用語データに不備があります: ${issues.first}');
@@ -190,6 +200,7 @@ Future<ExamData> loadExamData() async {
     attentionVizScenarios: parsedAttentionViz.scenarios,
     nnBuilderDatasets: parsedNnBuilder.datasets,
     ethicsCaseScenarios: parsedEthicsCase.scenarios,
+    storyScenarios: parsedStory.scenarios,
   );
 }
 

@@ -15,11 +15,11 @@ dependencies:
   app_common_kit:
     git:
       url: https://github.com/zka32101/app_common_kit.git
-      ref: 44cf8a4c8cc83c33248b4053b29e326c06d45138 # v0.8.0: ニューラルネット組み立て(NnBuilderWidget)
+      ref: f79e2a0f1bf40cc74ca06b7fc2e7704ee573f79a # v0.8.0: ストーリー型の共通エンジン(StoryModeWidget)
   yourwish_kentei:
     git:
       url: https://github.com/zka32101/yourwish_kentei.git
-      ref: 4498899ceb642ff09772ea111e2254fbe7bc9a98 # v0.10.0: AI倫理ケース(EthicsCaseScenario)のモデル・配信前検証
+      ref: 25f090a2d9be66891047ee245539e9ce03a690d1 # v0.10.0: ストーリー型の共通エンジン(StoryScenario)のモデル・配信前検証
 
   # 状態管理
   flutter_riverpod: ">=2.5.1 <3.0.0"
