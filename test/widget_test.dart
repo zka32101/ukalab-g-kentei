@@ -401,7 +401,7 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.byType(MethodChoiceWidget), findsOneWidget);
 
-    final choice = find.text('公平性(アルゴリズムバイアス・差別)');
+    final choice = find.text('公平性（アルゴリズムバイアス・差別）');
     await tester.ensureVisible(choice);
     await tester.tap(choice);
     await tester.pumpAndSettle();
