@@ -407,4 +407,32 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('わかった!'), findsOneWidget);
   });
+
+  testWidgets('AIプロジェクト経営モードを開いて章を進められる', (tester) async {
+    await tester.runAsync(() async {
+      await tester.pumpWidget(await _app());
+      await Future.delayed(const Duration(milliseconds: 300));
+    });
+    await tester.pumpAndSettle();
+
+    await tester.ensureVisible(find.text('AIプロジェクト経営モード'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('AIプロジェクト経営モード'));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('架空の小売企業でAI導入'));
+    await tester.pumpAndSettle();
+    expect(find.byType(StoryModeWidget), findsOneWidget);
+    expect(find.text('第1章 / 全6章'), findsOneWidget);
+
+    final choice = find.text('社内の購買履歴データを、個人情報保護の方針に沿って匿名化しながら収集する');
+    await tester.ensureVisible(choice);
+    await tester.tap(choice);
+    await tester.pumpAndSettle();
+    expect(find.text('よい判断です'), findsOneWidget);
+
+    await tester.tap(find.text('次の章へ'));
+    await tester.pumpAndSettle();
+    expect(find.text('第2章 / 全6章'), findsOneWidget);
+  });
 }
