@@ -39,7 +39,10 @@ void main() {
     await tester.tap(find.text('ペース走を始める'));
     await tester.pump();
 
-    expect(find.text('問題0'), findsNothing); // プロンプトはシャッフルされるため個別の値は見ない
+    // 開始前の説明は消え、問題文（出題順はシャッフルされるため、どの問題かは見ない）が1つ出る。
+    // 以前は「問題0 が出ない」ことを確認していたが、1問目に問題0が当たると失敗する（1/25）不安定なテストだった。
+    expect(find.text('ペース走を始める'), findsNothing);
+    expect(find.textContaining(RegExp(r'^問題\d+$')), findsOneWidget);
     expect(find.byIcon(Icons.flag_outlined), findsOneWidget);
     expect(find.textContaining('残り'), findsOneWidget);
   });
