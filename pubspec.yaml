@@ -19,7 +19,7 @@ dependencies:
   yourwish_kentei:
     git:
       url: https://github.com/zka32101/yourwish_kentei.git
-      ref: 652952eb54ac9f687c11b8dda42aa985ef27fadb # v0.10.0: ニューラルネット組み立て(NnBuilderDataset)のモデル・配信前検証
+      ref: 4498899ceb642ff09772ea111e2254fbe7bc9a98 # v0.10.0: AI倫理ケース(EthicsCaseScenario)のモデル・配信前検証
 
   # 状態管理
   flutter_riverpod: ">=2.5.1 <3.0.0"

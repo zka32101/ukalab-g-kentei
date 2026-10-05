@@ -8,6 +8,7 @@ import 'attention_viz_screen.dart';
 import 'boundary_screen.dart';
 import 'confusion_matrix_lab_screen.dart';
 import 'conv_lab_screen.dart';
+import 'ethics_case_screen.dart';
 import 'failure_gallery_screen.dart';
 import 'method_choice_screen.dart';
 import 'ml_lab_screen.dart';
@@ -37,6 +38,7 @@ class HomeScreen extends ConsumerWidget {
     required this.convLabImages,
     required this.attentionVizScenarios,
     required this.nnBuilderDatasets,
+    required this.ethicsCaseScenarios,
   });
 
   final ExamConfig exam;
@@ -53,6 +55,7 @@ class HomeScreen extends ConsumerWidget {
   final List<ConvLabImage> convLabImages;
   final List<AttentionVizScenario> attentionVizScenarios;
   final List<NnBuilderDataset> nnBuilderDatasets;
+  final List<EthicsCaseScenario> ethicsCaseScenarios;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -310,6 +313,25 @@ class HomeScreen extends ConsumerWidget {
                     builder: (context) => Scaffold(
                       appBar: AppBar(title: const Text('ニューラルネット組み立て')),
                       body: NnBuilderScreen(datasets: nnBuilderDatasets),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+          if (ethicsCaseScenarios.isNotEmpty) ...[
+            const SizedBox(height: 16),
+            Card(
+              child: ListTile(
+                leading: const Icon(Icons.psychology_outlined),
+                title: const Text('AI倫理ケース'),
+                subtitle: const Text('架空のケースから、公平性・プライバシーなどの観点で適切な判断を選びます。'),
+                trailing: const Icon(Icons.chevron_right),
+                onTap: () => Navigator.of(context).push(
+                  MaterialPageRoute<void>(
+                    builder: (context) => Scaffold(
+                      appBar: AppBar(title: const Text('AI倫理ケース')),
+                      body: EthicsCaseScreen(scenarios: ethicsCaseScenarios),
                     ),
                   ),
                 ),

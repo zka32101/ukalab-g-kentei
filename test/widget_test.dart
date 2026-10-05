@@ -384,4 +384,27 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.byType(CustomPaint), findsWidgets);
   });
+
+  testWidgets('AI倫理ケースを開いて正しい判断を選ぶと解説が出る', (tester) async {
+    await tester.runAsync(() async {
+      await tester.pumpWidget(await _app());
+      await Future.delayed(const Duration(milliseconds: 300));
+    });
+    await tester.pumpAndSettle();
+
+    await tester.ensureVisible(find.text('AI倫理ケース'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('AI倫理ケース'));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('採用AIの偏り'));
+    await tester.pumpAndSettle();
+    expect(find.byType(MethodChoiceWidget), findsOneWidget);
+
+    final choice = find.text('公平性(アルゴリズムバイアス・差別)');
+    await tester.ensureVisible(choice);
+    await tester.tap(choice);
+    await tester.pumpAndSettle();
+    expect(find.text('わかった!'), findsOneWidget);
+  });
 }
