@@ -7,7 +7,7 @@ import 'package:yourwish_kentei/yourwish_kentei.dart';
 /// 「145問ペース走」画面（型④の直前版、決定76）。
 ///
 /// 本番「100分で約145問」のペース感覚を、短縮版（20問×14分）で体感する。
-/// 採点は行わず、タイマー・旗（見直し候補）・ペース表示だけを提供する。
+/// タイマー・旗（見直し候補）・ペース表示に加え、選んだ答えの正誤を数えて最後に出す。
 class PaceRunScreen extends StatefulWidget {
   const PaceRunScreen({super.key, required this.questions});
 
@@ -29,6 +29,7 @@ class _PaceRunScreenState extends State<PaceRunScreen> {
   bool _timedOut = false;
   int _index = 0;
   final Set<String> _flagged = {};
+  int _correct = 0;
   List<Question> _picked = const [];
 
   @override
@@ -43,6 +44,7 @@ class _PaceRunScreenState extends State<PaceRunScreen> {
     setState(() {
       _picked = picked.take(count).toList();
       _flagged.clear();
+      _correct = 0;
       _index = 0;
       _elapsed = Duration.zero;
       _started = true;
@@ -67,7 +69,8 @@ class _PaceRunScreenState extends State<PaceRunScreen> {
     });
   }
 
-  void _next() {
+  void _next(int chosen) {
+    if (chosen == _picked[_index].answerIndex) _correct++;
     if (_index + 1 < _picked.length) {
       setState(() => _index++);
     } else {
@@ -106,7 +109,7 @@ class _PaceRunScreenState extends State<PaceRunScreen> {
             Text(
               '本番は100分で約145問（1問あたり約41秒）。'
               'その感覚を${config.questionCount}問・${config.timeLimitSec ~/ 60}分の短縮版で体感します。'
-              '採点はせず、ペースと見直し候補（旗）の練習です。',
+              '答えの正誤は最後にまとめて採点します。ペースと見直し候補（旗）も練習できます。',
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.bodyMedium,
             ),
@@ -131,6 +134,7 @@ class _PaceRunScreenState extends State<PaceRunScreen> {
             ),
             const SizedBox(height: 12),
             Text('解答数: ${_index + (_timedOut ? 0 : 1)} / ${_picked.length}問'),
+            Text('正解数: $_correct / ${_picked.length}問'),
             Text('見直し候補（旗）: ${_flagged.length}問'),
             const SizedBox(height: 24),
             FilledButton(onPressed: _start, child: const Text('もう一度')),
@@ -166,14 +170,17 @@ class _PaceRunScreenState extends State<PaceRunScreen> {
             ],
           ),
           const SizedBox(height: 4),
+          // 1問も解いていない間は、ペースを見積もれない（0問÷経過秒＝0 になり誤警告が出る）。
           Text(
-            status.onTrack
-                ? 'このペースなら時間内に解き切れそうです（${status.aheadBy >= 0 ? '+' : ''}${status.aheadBy}問）'
-                : 'このペースだと時間切れで残り'
-                    '${(PaceRunScreen._config.questionCount - status.projectedTotal).clamp(0, PaceRunScreen._config.questionCount)}問'
-                    '解けないかもしれません',
+            _index == 0
+                ? 'ペースは、1問解いてから表示します'
+                : status.onTrack
+                    ? 'このペースなら時間内に解き切れそうです（${status.aheadBy >= 0 ? '+' : ''}${status.aheadBy}問）'
+                    : 'このペースだと時間切れで残り'
+                        '${(PaceRunScreen._config.questionCount - status.projectedTotal).clamp(0, PaceRunScreen._config.questionCount)}問'
+                        '解けないかもしれません',
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: status.onTrack ? null : Theme.of(context).colorScheme.error,
+                  color: _index > 0 && !status.onTrack ? Theme.of(context).colorScheme.error : null,
                 ),
           ),
           const SizedBox(height: 16),
@@ -189,7 +196,7 @@ class _PaceRunScreenState extends State<PaceRunScreen> {
                     label: String.fromCharCode(0x41 + i),
                     text: q.choices[i],
                     state: ChoiceState.idle,
-                    onTap: _next,
+                    onTap: () => _next(i),
                   ),
                 ],
               ],
