@@ -514,8 +514,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: "652952eb54ac9f687c11b8dda42aa985ef27fadb"
-      resolved-ref: "652952eb54ac9f687c11b8dda42aa985ef27fadb"
+      ref: "4498899ceb642ff09772ea111e2254fbe7bc9a98"
+      resolved-ref: "4498899ceb642ff09772ea111e2254fbe7bc9a98"
       url: "https://github.com/zka32101/yourwish_kentei.git"
     source: git
     version: "0.10.0"
