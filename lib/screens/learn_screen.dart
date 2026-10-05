@@ -27,6 +27,14 @@ class _LearnScreenState extends ConsumerState<LearnScreen> {
   int? _selected;
   bool _answered = false;
 
+  /// 回答済みの間に画面へ出す問題。
+  ///
+  /// [PracticeSession.answer] は呼んだ時点で「現在の問題」を次へ進める。画面が
+  /// そのまま `_session.current` で描くと、回答した直後に次の問題の解説・選択肢の
+  /// 正誤の色が出てしまい、最後の問題では解説を読む前に結果画面へ飛ぶ。
+  /// そのため、回答した問題をここに覚えておき、「次へ」を押すまでこの問題で描く。
+  Question? _answeredQuestion;
+
   /// 問題ごとの選択肢の表示順（qid→実際のchoicesインデックスの並び）。
   /// 正解が常に先頭に来てしまわないよう、問題ごとに1回だけシャッフルする。
   final Map<String, List<int>> _choiceOrder = {};
@@ -47,6 +55,7 @@ class _LearnScreenState extends ConsumerState<LearnScreen> {
       _session = _newSession();
       _selected = null;
       _answered = false;
+      _answeredQuestion = null;
       _choiceOrder.clear();
     });
   }
@@ -54,19 +63,19 @@ class _LearnScreenState extends ConsumerState<LearnScreen> {
   Future<void> _select(int i) async {
     if (_answered) return;
     final q = _session.current;
+    if (q == null) return;
     setState(() {
       _selected = i;
       _answered = true;
+      _answeredQuestion = q;
     });
     _session.answer(i);
-    if (q != null) {
-      final correct = i == q.answerIndex;
-      await ref.read(progressProvider.notifier).recordAnswer(q.qid, correct: correct);
-      await ref.read(coinProvider.notifier).grant(CoinEvent.newQuestion(q.qid));
-      final streakDays = ref.read(progressProvider).streakDays;
-      if (streakCoinMilestones.contains(streakDays)) {
-        await ref.read(coinProvider.notifier).grant(CoinEvent.streak(streakDays));
-      }
+    final correct = i == q.answerIndex;
+    await ref.read(progressProvider.notifier).recordAnswer(q.qid, correct: correct);
+    await ref.read(coinProvider.notifier).grant(CoinEvent.newQuestion(q.qid));
+    final streakDays = ref.read(progressProvider).streakDays;
+    if (streakCoinMilestones.contains(streakDays)) {
+      await ref.read(coinProvider.notifier).grant(CoinEvent.streak(streakDays));
     }
   }
 
@@ -74,6 +83,7 @@ class _LearnScreenState extends ConsumerState<LearnScreen> {
     setState(() {
       _selected = null;
       _answered = false;
+      _answeredQuestion = null;
     });
     if (_session.current == null) {
       await ref.read(adGateProvider).maybeShowInterstitial(InterstitialTrigger.sessionEnd);
@@ -143,7 +153,8 @@ class _LearnScreenState extends ConsumerState<LearnScreen> {
     if (widget.questions.isEmpty) {
       return const EmptyState(message: '問題データがまだありません。');
     }
-    final q = _session.current;
+    // 回答済みの間は、回答した問題で描く（_answeredQuestion の説明を参照）。
+    final q = _answeredQuestion ?? _session.current;
     if (q == null) {
       final adGate = ref.watch(adGateProvider);
       return Center(
@@ -177,7 +188,8 @@ class _LearnScreenState extends ConsumerState<LearnScreen> {
               terms: _termRefs,
               onTermTap: _onTermTap,
             ),
-            index: _session.index + 1,
+            // 回答済みの間は、_session.index がすでに進んでいるので、1つ戻す。
+            index: _session.index + (_answered ? 0 : 1),
             total: _session.questions.length,
             child: Column(
               children: _buildChoices(q),

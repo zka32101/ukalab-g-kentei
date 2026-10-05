@@ -42,6 +42,48 @@ Question _question2() => const Question(
       contentVer: '1',
     );
 
+// 解説の取り違えを検出するため、内容が互いに異なる2問を使う（以前は同じ内容にして不具合を隠していた）。
+Question _qa() => const Question(
+      qid: 'qa',
+      examId: 'g_kentei',
+      subjectId: 'ml_overview',
+      topicId: 'a',
+      prompt: '問題Aの文',
+      choices: ['Aの正解', 'Aの誤り1', 'Aの誤り2', 'Aの誤り3'],
+      answerIndex: 0,
+      explanation: '解説Aの本文',
+      source: QuestionSource.original,
+      sourceRef: '自作',
+      contentVer: '1',
+    );
+
+Question _qb() => const Question(
+      qid: 'qb',
+      examId: 'g_kentei',
+      subjectId: 'ml_overview',
+      topicId: 'b',
+      prompt: '問題Bの文',
+      choices: ['Bの正解', 'Bの誤り1', 'Bの誤り2', 'Bの誤り3'],
+      answerIndex: 0,
+      explanation: '解説Bの本文',
+      source: QuestionSource.original,
+      sourceRef: '自作',
+      contentVer: '1',
+    );
+
+Widget _learn(List<Question> qs, AdGate adGate, {int? size}) => ProviderScope(
+      overrides: [
+        coinServiceProvider.overrideWithValue(CoinService(store: InMemoryCoinStore())),
+        adGateProvider.overrideWithValue(adGate),
+      ],
+      child: MaterialApp(
+        theme: UkalabTheme.light(field: UkalabField.ai, cert: UkalabCert.gKentei),
+        home: Scaffold(
+          body: LearnScreen(questions: qs, terms: const [], sessionSize: size ?? qs.length),
+        ),
+      ),
+    );
+
 Term _term() => const Term(
       termId: 't1',
       examId: 'g_kentei',
@@ -186,5 +228,87 @@ void main() {
       ),
       findsOneWidget,
     );
+  });
+
+  group('回答直後の表示は、回答した問題のものになる（解説が別の問題になる不具合）', () {
+    // 出題順はシャッフルされるので、いま出ている問題がAかBかを画面から判定する。
+    String shown(WidgetTester tester) =>
+        find.text('問題Aの文').evaluate().isNotEmpty ? 'A' : 'B';
+
+    testWidgets('回答直後は、いま出ていた問題の解説が出る（次の問題の解説ではない）', (tester) async {
+      await tester.pumpWidget(_learn([_qa(), _qb()], await testAdGate(), size: 2));
+      await tester.pumpAndSettle();
+
+      final first = shown(tester);
+      final other = first == 'A' ? 'B' : 'A';
+      await tester.tap(find.text('$firstの正解'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('解説$firstの本文'), findsOneWidget);
+      expect(find.text('解説$otherの本文'), findsNothing);
+      // 問題文・選択肢も、回答した問題のまま（次の問題に切り替わっていない）。
+      expect(find.text('問題$firstの文'), findsOneWidget);
+      expect(find.text('問題$otherの文'), findsNothing);
+    });
+
+    testWidgets('回答直後の正誤の色は、回答した問題の選択肢に付く', (tester) async {
+      await tester.pumpWidget(_learn([_qa(), _qb()], await testAdGate(), size: 2));
+      await tester.pumpAndSettle();
+
+      final first = shown(tester);
+      await tester.tap(find.text('$firstの誤り1'));
+      await tester.pumpAndSettle();
+
+      // 回答した問題の選択肢が全て残っていて、次の問題の選択肢は出ていない。
+      expect(find.text('$firstの正解'), findsOneWidget);
+      expect(find.text('$firstの誤り1'), findsOneWidget);
+      final other = first == 'A' ? 'B' : 'A';
+      expect(find.text('$otherの正解'), findsNothing);
+    });
+
+    testWidgets('「次へ」で次の問題に進み、解説は消える', (tester) async {
+      await tester.pumpWidget(_learn([_qa(), _qb()], await testAdGate(), size: 2));
+      await tester.pumpAndSettle();
+
+      final first = shown(tester);
+      final other = first == 'A' ? 'B' : 'A';
+      await tester.tap(find.text('$firstの正解'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('次へ'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('問題$otherの文'), findsOneWidget);
+      expect(find.text('解説$firstの本文'), findsNothing);
+      expect(find.text('解説'), findsNothing);
+    });
+
+    testWidgets('最後の問題でも、解説を見てから「次へ」で結果画面に進む', (tester) async {
+      await tester.pumpWidget(_learn([_qa()], await testAdGate(), size: 1));
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text('Aの正解'));
+      await tester.pumpAndSettle();
+      // 以前は、回答した瞬間に結果画面へ飛び、最後の解説が読めなかった。
+      expect(find.text('解説Aの本文'), findsOneWidget);
+      expect(find.byType(ResultSummary), findsNothing);
+
+      await tester.tap(find.text('次へ'));
+      await tester.pumpAndSettle();
+      expect(find.byType(ResultSummary), findsOneWidget);
+    });
+
+    testWidgets('回答後に選択肢を押し直しても、記録は変わらない（二重回答しない）', (tester) async {
+      await tester.pumpWidget(_learn([_qa(), _qb()], await testAdGate(), size: 2));
+      await tester.pumpAndSettle();
+
+      final first = shown(tester);
+      await tester.tap(find.text('$firstの正解'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('$firstの誤り1'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('解説$firstの本文'), findsOneWidget);
+      expect(find.byType(ResultSummary), findsNothing);
+    });
   });
 }
