@@ -311,15 +311,16 @@ void main() {
     expect(find.text('深さ'), findsOneWidget);
   });
 
-  testWidgets('ホームに今月のAI動向が表示される', (tester) async {
+  testWidgets('今月のAI動向は、掲載データが無い間はホームに出ない（実在しない出典URLの仮データを出さない）',
+      (tester) async {
     await tester.runAsync(() async {
       await tester.pumpWidget(await _app());
       await Future.delayed(const Duration(milliseconds: 300));
     });
     await tester.pumpAndSettle();
 
-    expect(find.text('今月のAI動向'), findsOneWidget);
-    expect(find.byType(AiNewsCard), findsOneWidget);
+    expect(find.text('今月のAI動向'), findsNothing);
+    expect(find.byType(AiNewsCard), findsNothing);
   });
 
   testWidgets('画像認識の中身を見るを開いてフィルタを切り替えられる', (tester) async {
