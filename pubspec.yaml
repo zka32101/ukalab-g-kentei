@@ -15,7 +15,7 @@ dependencies:
   app_common_kit:
     git:
       url: https://github.com/zka32101/app_common_kit.git
-      ref: 87e0b1add259e27a3123f2a7d5dded459cc6d4d9 # PR#51: コンテナ色を明示(評価指標ラボのチップ等の文字が読めない不具合の修正)
+      ref: 1f4be249de93cc25da2937ce9680753c551ca5c1 # PR#52: ストーリー型の選択肢を折り返すボタンにして文字切れを修正
   yourwish_kentei:
     git:
       url: https://github.com/zka32101/yourwish_kentei.git
