@@ -34,6 +34,26 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
+  testWidgets('通常表示では説明が十分な幅を持ち、1文字ずつ縦に折り返されない（実機の不具合の再発防止）',
+      (tester) async {
+    tester.view.physicalSize = const Size(1080, 2400);
+    tester.view.devicePixelRatio = 3.0; // 幅 360dp（一般的なスマホ）
+    addTearDown(tester.view.reset);
+    await tester.pumpWidget(_app(const OshiCard(totalQuestions: 600)));
+    await tester.pumpAndSettle();
+
+    final desc = tester.getSize(find.text('推しをタップすると、ひとこと話します'));
+    // 以前は横並びで説明の幅が約 60dp になり、1文字ずつ折り返されていた。
+    expect(desc.width, greaterThan(200));
+    // 14文字の1行文（bodySmall）。縦に折り返されれば高さは数倍になる。
+    expect(desc.height, lessThan(40));
+    // 推しは説明より上にある（縦並び）。
+    final mascotBottom = tester.getBottomLeft(find.byType(MascotWidget)).dy;
+    final descTop = tester.getTopLeft(find.text('推しをタップすると、ひとこと話します')).dy;
+    expect(mascotBottom, lessThanOrEqualTo(descTop));
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('メニューから表示設定を変更できる', (tester) async {
     await tester.pumpWidget(_app(const OshiCard(totalQuestions: 600)));
     await tester.pumpAndSettle();

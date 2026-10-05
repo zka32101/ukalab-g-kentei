@@ -15,7 +15,7 @@ dependencies:
   app_common_kit:
     git:
       url: https://github.com/zka32101/app_common_kit.git
-      ref: f79e2a0f1bf40cc74ca06b7fc2e7704ee573f79a # v0.8.0: ストーリー型の共通エンジン(StoryModeWidget)
+      ref: 87e0b1add259e27a3123f2a7d5dded459cc6d4d9 # PR#51: コンテナ色を明示(評価指標ラボのチップ等の文字が読めない不具合の修正)
   yourwish_kentei:
     git:
       url: https://github.com/zka32101/yourwish_kentei.git
