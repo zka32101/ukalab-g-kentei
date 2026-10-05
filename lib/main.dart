@@ -3,6 +3,7 @@ import 'dart:io' show Platform;
 import 'package:app_common_kit/app_common_kit.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'data/exam_repository.dart';
@@ -27,6 +28,14 @@ AdUnitIds _testAdUnitIds() => Platform.isIOS
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // 同梱フォントのライセンス（SIL OFL 1.1）を、設定のライセンス表示へ載せる。
+  LicenseRegistry.addLicense(() async* {
+    yield LicenseEntryWithLineBreaks(
+      ['BIZ UDPGothic'],
+      await rootBundle.loadString('assets/fonts/OFL.txt'),
+    );
+  });
 
   // 学習コイン・衣装（app_common_kit）。財布・衣装台帳はアプリごとに端末内保存
   // （決定67〜77）。ショップには通常衣装（G検定、コイン購入）だけを並べる。
@@ -89,6 +98,14 @@ void main() async {
   ));
 }
 
+/// 同梱フォント（BIZ UDPGothic）。端末のフォントで漢字の字形が変わるのを防ぐ。
+const kAppFontFamily = 'BIZUDPGothic';
+
+ThemeData _withFont(ThemeData t) => t.copyWith(
+      textTheme: t.textTheme.apply(fontFamily: kAppFontFamily),
+      primaryTextTheme: t.primaryTextTheme.apply(fontFamily: kAppFontFamily),
+    );
+
 class UkalabGKenteiApp extends StatelessWidget {
   const UkalabGKenteiApp({super.key});
 
@@ -97,8 +114,9 @@ class UkalabGKenteiApp extends StatelessWidget {
     return MaterialApp(
       title: 'うかラボ G検定',
       debugShowCheckedModeBanner: false,
-      theme: UkalabTheme.light(field: UkalabField.ai, cert: UkalabCert.gKentei),
-      darkTheme: UkalabTheme.dark(field: UkalabField.ai, cert: UkalabCert.gKentei),
+      locale: const Locale('ja', 'JP'),
+      theme: _withFont(UkalabTheme.light(field: UkalabField.ai, cert: UkalabCert.gKentei)),
+      darkTheme: _withFont(UkalabTheme.dark(field: UkalabField.ai, cert: UkalabCert.gKentei)),
       home: const _RootPage(),
     );
   }
