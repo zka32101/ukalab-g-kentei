@@ -21,6 +21,7 @@ class ExamData {
     required this.aiNewsItems,
     required this.convLabImages,
     required this.attentionVizScenarios,
+    required this.nnBuilderDatasets,
   });
 
   final ExamConfig exam;
@@ -56,6 +57,9 @@ class ExamData {
 
   /// Transformerの注意の可視化（画期的な機能5）の場面一覧。
   final List<AttentionVizScenario> attentionVizScenarios;
+
+  /// ニューラルネット組み立て（画期的な機能2）のデータセット一覧。
+  final List<NnBuilderDataset> nnBuilderDatasets;
 
   List<Question> get activeQuestions =>
       questions.where((q) => !q.disabled).toList();
@@ -121,6 +125,10 @@ Future<ExamData> loadExamData() async {
       await rootBundle.loadString('assets/experience/attention_viz_g_kentei.jsonl');
   final parsedAttentionViz = parseAttentionVizScenariosJsonl(attentionVizJsonl);
 
+  final nnBuilderJsonl =
+      await rootBundle.loadString('assets/experience/nn_builder_g_kentei.jsonl');
+  final parsedNnBuilder = parseNnBuilderDatasetsJsonl(nnBuilderJsonl);
+
   final issues = [
     ...parsed.issues,
     ...validateQuestions(parsed.questions, exam: exam),
@@ -150,6 +158,8 @@ Future<ExamData> loadExamData() async {
     ...validateConvLabImages(parsedConvLab.images, exam: exam),
     ...parsedAttentionViz.issues,
     ...validateAttentionVizScenarios(parsedAttentionViz.scenarios, exam: exam),
+    ...parsedNnBuilder.issues,
+    ...validateNnBuilderDatasets(parsedNnBuilder.datasets, exam: exam),
   ];
   if (issues.isNotEmpty) {
     throw StateError('問題・用語データに不備があります: ${issues.first}');
@@ -168,6 +178,7 @@ Future<ExamData> loadExamData() async {
     aiNewsItems: parsedAiNews.items,
     convLabImages: parsedConvLab.images,
     attentionVizScenarios: parsedAttentionViz.scenarios,
+    nnBuilderDatasets: parsedNnBuilder.datasets,
   );
 }
 
