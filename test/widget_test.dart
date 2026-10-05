@@ -342,4 +342,25 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.byType(CustomPaint), findsWidgets);
   });
+
+  testWidgets('Transformerの注意の可視化を開いて単語を切り替えられる', (tester) async {
+    await tester.runAsync(() async {
+      await tester.pumpWidget(await _app());
+      await Future.delayed(const Duration(milliseconds: 300));
+    });
+    await tester.pumpAndSettle();
+
+    await tester.ensureVisible(find.text('Transformerの注意の可視化'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Transformerの注意の可視化'));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('誰が何を食べた？'));
+    await tester.pumpAndSettle();
+    expect(find.byType(AttentionVizWidget), findsOneWidget);
+
+    await tester.tap(find.widgetWithText(ChoiceChip, '食べた'));
+    await tester.pumpAndSettle();
+    expect(find.textContaining('「食べた」は'), findsOneWidget);
+  });
 }

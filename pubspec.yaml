@@ -15,11 +15,11 @@ dependencies:
   app_common_kit:
     git:
       url: https://github.com/zka32101/app_common_kit.git
-      ref: b3e37c864f574bcf7b5e7fedd7a7af8479920bc1 # v0.8.0: 画像認識の中身を見る(ConvLabWidget)
+      ref: 64dec3c36029d9c7c49bd8fe5ffde55a3f113e9f # v0.8.0: Transformerの注意の可視化(AttentionVizWidget)
   yourwish_kentei:
     git:
       url: https://github.com/zka32101/yourwish_kentei.git
-      ref: cfca5ebd0b2418b674f3d8d60ec2bf7e3ae6f67a # v0.10.0: 画像認識の中身を見る(ConvLabImage)のモデル・配信前検証
+      ref: 69c568bcf965059ff1083403c057c3ff50090132 # v0.10.0: Transformerの注意の可視化(AttentionVizScenario)のモデル・配信前検証
 
   # 状態管理
   flutter_riverpod: ">=2.5.1 <3.0.0"

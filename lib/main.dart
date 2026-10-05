@@ -135,6 +135,7 @@ class _RootPage extends ConsumerWidget {
               mlLabDatasets: data.mlLabDatasets,
               aiNewsItems: data.aiNewsItems,
               convLabImages: data.convLabImages,
+              attentionVizScenarios: data.attentionVizScenarios,
             ),
             LearnScreen(questions: questions, terms: data.terms),
             MockExamScreen(exam: data.exam, questions: questions),

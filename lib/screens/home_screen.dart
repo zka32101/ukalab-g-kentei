@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:yourwish_kentei/yourwish_kentei.dart';
 
 import '../widgets/oshi_card.dart';
+import 'attention_viz_screen.dart';
 import 'boundary_screen.dart';
 import 'confusion_matrix_lab_screen.dart';
 import 'conv_lab_screen.dart';
@@ -33,6 +34,7 @@ class HomeScreen extends ConsumerWidget {
     required this.mlLabDatasets,
     required this.aiNewsItems,
     required this.convLabImages,
+    required this.attentionVizScenarios,
   });
 
   final ExamConfig exam;
@@ -47,6 +49,7 @@ class HomeScreen extends ConsumerWidget {
   final List<MlLabDataset> mlLabDatasets;
   final List<AiNewsItem> aiNewsItems;
   final List<ConvLabImage> convLabImages;
+  final List<AttentionVizScenario> attentionVizScenarios;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -266,6 +269,25 @@ class HomeScreen extends ConsumerWidget {
                     builder: (context) => Scaffold(
                       appBar: AppBar(title: const Text('画像認識の中身を見る')),
                       body: ConvLabScreen(images: convLabImages),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+          if (attentionVizScenarios.isNotEmpty) ...[
+            const SizedBox(height: 16),
+            Card(
+              child: ListTile(
+                leading: const Icon(Icons.share_outlined),
+                title: const Text('Transformerの注意の可視化'),
+                subtitle: const Text('単語同士の注意（Attention）の強さを、線の太さ・濃さで見ます。'),
+                trailing: const Icon(Icons.chevron_right),
+                onTap: () => Navigator.of(context).push(
+                  MaterialPageRoute<void>(
+                    builder: (context) => Scaffold(
+                      appBar: AppBar(title: const Text('Transformerの注意の可視化')),
+                      body: AttentionVizScreen(scenarios: attentionVizScenarios),
                     ),
                   ),
                 ),
