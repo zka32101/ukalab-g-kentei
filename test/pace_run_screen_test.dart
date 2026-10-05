@@ -75,6 +75,27 @@ void main() {
     expect(find.textContaining('解答数: 2 / 2問'), findsOneWidget);
   });
 
+  testWidgets('1問も解いていない間は「解けないかもしれません」を出さない', (tester) async {
+    await _pump(tester, _questions(25));
+    await tester.tap(find.text('ペース走を始める'));
+    await tester.pump(const Duration(seconds: 3));
+
+    expect(find.textContaining('解けないかもしれません'), findsNothing);
+  });
+
+  testWidgets('正誤を数えて、結果画面に正解数を出す', (tester) async {
+    await _pump(tester, _questions(2));
+    await tester.tap(find.text('ペース走を始める'));
+    await tester.pump();
+
+    await tester.tap(find.text('正解').first);
+    await tester.pump();
+    await tester.tap(find.text('不正解').first);
+    await tester.pump();
+
+    expect(find.text('正解数: 1 / 2問'), findsOneWidget);
+  });
+
   testWidgets('問題データが0件でも落ちない', (tester) async {
     await _pump(tester, const []);
     expect(tester.takeException(), isNull);
