@@ -363,4 +363,25 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.textContaining('「食べた」は'), findsOneWidget);
   });
+
+  testWidgets('ニューラルネット組み立てを開いて隠れ層の数を切り替えられる', (tester) async {
+    await tester.runAsync(() async {
+      await tester.pumpWidget(await _app());
+      await Future.delayed(const Duration(milliseconds: 300));
+    });
+    await tester.pumpAndSettle();
+
+    await tester.ensureVisible(find.text('ニューラルネット組み立て'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('ニューラルネット組み立て'));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('XORパターン（隠れ層で分けられるか）'));
+    await tester.pumpAndSettle();
+    expect(find.byType(NnBuilderWidget), findsOneWidget);
+
+    await tester.tap(find.text('2層'));
+    await tester.pumpAndSettle();
+    expect(find.byType(CustomPaint), findsWidgets);
+  });
 }

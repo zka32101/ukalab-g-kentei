@@ -11,6 +11,7 @@ import 'conv_lab_screen.dart';
 import 'failure_gallery_screen.dart';
 import 'method_choice_screen.dart';
 import 'ml_lab_screen.dart';
+import 'nn_builder_screen.dart';
 import 'pace_run_screen.dart';
 import 'predict_run_screen.dart';
 import 'route_planner_screen.dart';
@@ -35,6 +36,7 @@ class HomeScreen extends ConsumerWidget {
     required this.aiNewsItems,
     required this.convLabImages,
     required this.attentionVizScenarios,
+    required this.nnBuilderDatasets,
   });
 
   final ExamConfig exam;
@@ -50,6 +52,7 @@ class HomeScreen extends ConsumerWidget {
   final List<AiNewsItem> aiNewsItems;
   final List<ConvLabImage> convLabImages;
   final List<AttentionVizScenario> attentionVizScenarios;
+  final List<NnBuilderDataset> nnBuilderDatasets;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -288,6 +291,25 @@ class HomeScreen extends ConsumerWidget {
                     builder: (context) => Scaffold(
                       appBar: AppBar(title: const Text('Transformerの注意の可視化')),
                       body: AttentionVizScreen(scenarios: attentionVizScenarios),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+          if (nnBuilderDatasets.isNotEmpty) ...[
+            const SizedBox(height: 16),
+            Card(
+              child: ListTile(
+                leading: const Icon(Icons.account_tree_outlined),
+                title: const Text('ニューラルネット組み立て'),
+                subtitle: const Text('隠れ層・ユニット数・活性化関数・学習率を選び、決定境界の変化を体験します。'),
+                trailing: const Icon(Icons.chevron_right),
+                onTap: () => Navigator.of(context).push(
+                  MaterialPageRoute<void>(
+                    builder: (context) => Scaffold(
+                      appBar: AppBar(title: const Text('ニューラルネット組み立て')),
+                      body: NnBuilderScreen(datasets: nnBuilderDatasets),
                     ),
                   ),
                 ),
