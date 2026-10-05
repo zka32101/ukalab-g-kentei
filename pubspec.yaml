@@ -40,6 +40,14 @@ flutter:
     - assets/questions/
     - assets/terms/
     - assets/experience/
+    - assets/fonts/OFL.txt
+  fonts:
+    # BIZ UDPGothic（SIL OFL 1.1・モリサワ）。端末のフォント差で漢字の字形が変わらないよう同梱。
+    - family: BIZUDPGothic
+      fonts:
+        - asset: assets/fonts/BIZUDPGothic-Regular.ttf
+        - asset: assets/fonts/BIZUDPGothic-Bold.ttf
+          weight: 700
 
 # アプリアイコン（うかラボ共通テンプレート。決定75・ukalab_アプリアイコン作成方針_v0_1）。
 # 生成元: app_common_kit/tools/icon_gen。`dart run flutter_launcher_icons` で反映する。
