@@ -13,8 +13,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: "24133b55c3cb4311a9c76230f75042161d72494a"
-      resolved-ref: "24133b55c3cb4311a9c76230f75042161d72494a"
+      ref: "489e8bd5a2456a554c819078ee4568a50b670be3"
+      resolved-ref: "489e8bd5a2456a554c819078ee4568a50b670be3"
       url: "https://github.com/zka32101/app_common_kit.git"
     source: git
     version: "0.8.0"
