@@ -15,7 +15,7 @@ dependencies:
   app_common_kit:
     git:
       url: https://github.com/zka32101/app_common_kit.git
-      ref: 24133b55c3cb4311a9c76230f75042161d72494a # 起動画面の組織ロゴ(StartupSplash)・テスト観点集
+      ref: 489e8bd5a2456a554c819078ee4568a50b670be3 # 組織ロゴの既定サイズ72・テスト観点集
   yourwish_kentei:
     git:
       url: https://github.com/zka32101/yourwish_kentei.git
