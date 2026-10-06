@@ -129,7 +129,7 @@ class _RootPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final examData = ref.watch(examDataProvider);
     return examData.when(
-      loading: () => const Scaffold(body: Center(child: CircularProgressIndicator())),
+      loading: () => const StartupSplash(),
       error: (e, st) => Scaffold(
         body: ErrorState(
           message: '問題データを読み込めませんでした。\n$e',

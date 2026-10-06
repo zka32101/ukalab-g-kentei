@@ -15,7 +15,7 @@ dependencies:
   app_common_kit:
     git:
       url: https://github.com/zka32101/app_common_kit.git
-      ref: 2dcfc23b67236002b0fea5d9b64d2503ca8510d1 # PR#52-53: ストーリー選択肢の折り返し・用語詳細シートの下部見切れ修正
+      ref: 24133b55c3cb4311a9c76230f75042161d72494a # 起動画面の組織ロゴ(StartupSplash)・テスト観点集
   yourwish_kentei:
     git:
       url: https://github.com/zka32101/yourwish_kentei.git
