@@ -15,7 +15,7 @@ dependencies:
   app_common_kit:
     git:
       url: https://github.com/zka32101/app_common_kit.git
-      ref: v0.12.0 # 推しカードの完成品 UkalabOshiCard
+      ref: v0.13.0 # 推しカードの完成品 UkalabOshiCard
   yourwish_kentei:
     git:
       url: https://github.com/zka32101/yourwish_kentei.git
