@@ -85,6 +85,7 @@ class _OshiCardState extends ConsumerState<OshiCard> {
   @override
   Widget build(BuildContext context) {
     final display = ref.watch(oshiDisplayProvider);
+    final pack = ref.watch(selectedCharacterPackProvider);
     final theme = Theme.of(context);
     final coin = ref.watch(coinProvider);
     final now = DateTime.now();
@@ -108,7 +109,13 @@ class _OshiCardState extends ConsumerState<OshiCard> {
       onSelected: (v) {
         if (v == 'wardrobe') {
           Navigator.of(context).push(MaterialPageRoute<void>(
-            builder: (_) => WardrobeScreen(cert: UkalabCert.gKentei, examPhase: examPhase),
+            builder: (_) => WardrobeScreen(cert: UkalabCert.gKentei, examPhase: examPhase, pack: pack),
+          ));
+          return;
+        }
+        if (v == 'choose') {
+          Navigator.of(context).push(MaterialPageRoute<void>(
+            builder: (_) => const CharacterSelectScreen(),
           ));
           return;
         }
@@ -120,6 +127,7 @@ class _OshiCardState extends ConsumerState<OshiCard> {
         ref.read(oshiDisplayProvider.notifier).set(d);
       },
       itemBuilder: (_) => const [
+        PopupMenuItem(value: 'choose', child: Text('推しを選ぶ')),
         PopupMenuItem(value: 'wardrobe', child: Text('着替え・ショップ')),
         PopupMenuItem(value: 'passReport', child: Text('合格報告')),
         PopupMenuItem(value: 'normal', child: Text('通常')),
@@ -150,6 +158,7 @@ class _OshiCardState extends ConsumerState<OshiCard> {
     final equipped = ref.watch(equippedOutfitProvider);
 
     final mascot = MascotWidget(
+      pack: pack,
       stage: stage,
       outfit: equipped,
       expression: day.expression,
@@ -162,7 +171,7 @@ class _OshiCardState extends ConsumerState<OshiCard> {
     final info = Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('あなたの推し  Lv${stage.level}', style: theme.textTheme.titleSmall),
+        Text('${pack.isBuiltIn ? 'あなたの推し' : pack.name}  Lv${stage.level}', style: theme.textTheme.titleSmall),
         const SizedBox(height: 4),
         Text(
           small ? line : '推しをタップすると、ひとこと話します',

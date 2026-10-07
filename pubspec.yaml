@@ -15,7 +15,7 @@ dependencies:
   app_common_kit:
     git:
       url: https://github.com/zka32101/app_common_kit.git
-      ref: 489e8bd5a2456a554c819078ee4568a50b670be3 # 組織ロゴの既定サイズ72・テスト観点集
+      ref: v0.9.0 # 推し4体(CharacterPack・衣装画像・選択画面)
   yourwish_kentei:
     git:
       url: https://github.com/zka32101/yourwish_kentei.git
