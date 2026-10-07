@@ -15,7 +15,7 @@ dependencies:
   app_common_kit:
     git:
       url: https://github.com/zka32101/app_common_kit.git
-      ref: v0.9.0 # 推し4体(CharacterPack・衣装画像・選択画面)
+      ref: v0.11.0 # 推しカードの完成品 UkalabOshiCard
   yourwish_kentei:
     git:
       url: https://github.com/zka32101/yourwish_kentei.git

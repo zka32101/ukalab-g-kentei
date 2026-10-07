@@ -1,7 +1,6 @@
 import 'package:app_common_kit/app_common_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../data/progress_store.dart';
 
@@ -34,39 +33,9 @@ MascotStage oshiStageFor({
   return MasteryModel.standard.stageOf(mastery);
 }
 
-const _kDisplayKey = 'ukalab_g_kentei_oshi_display';
-
-/// 推しの表示設定（通常／小さく／非表示）。端末内に保存する。
-class OshiDisplayNotifier extends Notifier<MascotDisplay> {
-  @override
-  MascotDisplay build() {
-    _load();
-    return MascotDisplay.normal;
-  }
-
-  Future<void> _load() async {
-    final prefs = await SharedPreferences.getInstance();
-    final v = prefs.getString(_kDisplayKey);
-    if (v == null) return;
-    state = MascotDisplay.values.firstWhere(
-      (e) => e.name == v,
-      orElse: () => MascotDisplay.normal,
-    );
-  }
-
-  Future<void> set(MascotDisplay d) async {
-    state = d;
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(_kDisplayKey, d.name);
-  }
-}
-
-final oshiDisplayProvider =
-    NotifierProvider<OshiDisplayNotifier, MascotDisplay>(OshiDisplayNotifier.new);
-
-/// ホームの「推し」カード。学習が進むと成長し、状況に合ったひとことを話す。
-/// タップでひとことが変わる。メニューから小さく／非表示にできる。
-class OshiCard extends ConsumerStatefulWidget {
+/// ホームの「推し」カード。共通キットの [UkalabOshiCard] に、G検定の成長段階・連続日数・
+/// 試験日を渡す。推しの選択・着替え・合格報告・表示切替・コイン表示はキット側。
+class OshiCard extends ConsumerWidget {
   const OshiCard({super.key, required this.totalQuestions, this.examDate});
 
   /// 出題範囲の全問題数（網羅率の分母）。
@@ -76,143 +45,20 @@ class OshiCard extends ConsumerStatefulWidget {
   final DateTime? examDate;
 
   @override
-  ConsumerState<OshiCard> createState() => _OshiCardState();
-}
-
-class _OshiCardState extends ConsumerState<OshiCard> {
-  int _seed = 0;
-
-  @override
-  Widget build(BuildContext context) {
-    final display = ref.watch(oshiDisplayProvider);
-    final pack = ref.watch(selectedCharacterPackProvider);
-    final theme = Theme.of(context);
-    final coin = ref.watch(coinProvider);
-    final now = DateTime.now();
+  Widget build(BuildContext context, WidgetRef ref) {
     final progress = ref.watch(progressProvider);
-    final day = MascotDayState(
-      examDate: widget.examDate,
-      studiedToday: progress.lastStudyDay == studyDayKey(now),
-      streakDays: progress.streakDays,
-    );
-    final examPhase = day.examPhase(now);
-    final stage = oshiStageFor(
-      distinctAnswered: progress.distinctAnswered,
-      totalQuestions: widget.totalQuestions,
-      correct: progress.correctCount,
-    );
-    // PopupMenuButton は showMenu の戻り値が null だと「キャンセル」と区別できず
-    // onSelected を呼ばないため、value は null にできない。文字列で表す。
-    final menu = PopupMenuButton<String>(
-      tooltip: '推しの表示',
-      icon: const Icon(Icons.more_vert),
-      onSelected: (v) {
-        if (v == 'wardrobe') {
-          Navigator.of(context).push(MaterialPageRoute<void>(
-            builder: (_) => WardrobeScreen(cert: UkalabCert.gKentei, examPhase: examPhase, pack: pack),
-          ));
-          return;
-        }
-        if (v == 'choose') {
-          Navigator.of(context).push(MaterialPageRoute<void>(
-            builder: (_) => const CharacterSelectScreen(),
-          ));
-          return;
-        }
-        if (v == 'passReport') {
-          showPassReportDialog(context, ref, cert: UkalabCert.gKentei, stage: stage);
-          return;
-        }
-        final d = MascotDisplay.values.firstWhere((e) => e.name == v);
-        ref.read(oshiDisplayProvider.notifier).set(d);
-      },
-      itemBuilder: (_) => const [
-        PopupMenuItem(value: 'choose', child: Text('推しを選ぶ')),
-        PopupMenuItem(value: 'wardrobe', child: Text('着替え・ショップ')),
-        PopupMenuItem(value: 'passReport', child: Text('合格報告')),
-        PopupMenuItem(value: 'normal', child: Text('通常')),
-        PopupMenuItem(value: 'small', child: Text('小さく表示')),
-        PopupMenuItem(value: 'hidden', child: Text('表示しない')),
-      ],
-    );
-
-    if (display == MascotDisplay.hidden) {
-      return Card(
-        child: ListTile(
-          title: Text('学習コイン ${coin.balance}', style: theme.textTheme.labelLarge),
-          subtitle: const Text('推しは非表示です'),
-          trailing: menu,
-        ),
-      );
-    }
-
-    final situation = switch (examPhase) {
-      ExamPhase.today => MascotSituation.examToday,
-      ExamPhase.eve => MascotSituation.examEve,
-      ExamPhase.close => MascotSituation.examClose,
-      ExamPhase.approaching => MascotSituation.examApproaching,
-      ExamPhase.none => MascotSituation.greeting,
-    };
-    final line = MascotLines.gentle.pick(situation, seed: _seed);
-    final small = display == MascotDisplay.small;
-    final equipped = ref.watch(equippedOutfitProvider);
-
-    final mascot = MascotWidget(
-      pack: pack,
-      stage: stage,
-      outfit: equipped,
-      expression: day.expression,
-      examPhase: examPhase,
-      display: display,
-      size: small ? 56 : 88,
-      line: small ? null : line,
-      onTap: () => setState(() => _seed++),
-    );
-    final info = Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text('${pack.isBuiltIn ? 'あなたの推し' : pack.name}  Lv${stage.level}', style: theme.textTheme.titleSmall),
-        const SizedBox(height: 4),
-        Text(
-          small ? line : '推しをタップすると、ひとこと話します',
-          style: theme.textTheme.bodySmall,
-        ),
-        const SizedBox(height: 4),
-        Text('学習コイン ${coin.balance}', style: theme.textTheme.labelMedium),
-        const SizedBox(height: 4),
-        StreakBadge(days: progress.streakDays),
-      ],
-    );
-
-    // 通常表示は吹き出し（最大200dp）が横幅を取り、横並びだと説明の幅がほぼ無くなって
-    // 1文字ずつ縦に折り返される（実機で確認）。推しを上、説明を下の行に置く。
-    // 小さい表示は吹き出しが無いので、横並びのまま。
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(12, 12, 4, 12),
-        child: small
-            ? Row(
-                children: [
-                  mascot,
-                  const SizedBox(width: 12),
-                  Expanded(child: info),
-                  menu,
-                ],
-              )
-            : Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Center(child: mascot),
-                  const SizedBox(height: 8),
-                  Row(
-                    children: [
-                      Expanded(child: info),
-                      menu,
-                    ],
-                  ),
-                ],
-              ),
+    final now = DateTime.now();
+    return UkalabOshiCard(
+      cert: UkalabCert.gKentei,
+      stage: oshiStageFor(
+        distinctAnswered: progress.distinctAnswered,
+        totalQuestions: totalQuestions,
+        correct: progress.correctCount,
       ),
+      appId: 'g_kentei',
+      examDate: examDate,
+      streakDays: progress.streakDays,
+      studiedToday: progress.lastStudyDay == studyDayKey(now),
     );
   }
 }
