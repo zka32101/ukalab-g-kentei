@@ -92,7 +92,7 @@ void main() {
 
     await tester.tap(find.byIcon(Icons.more_vert));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('合格報告'));
+    await tester.tap(find.text('試験の結果を報告')); // キット版のメニュー名
     await tester.pumpAndSettle();
 
     expect(find.textContaining('の結果を教えてください'), findsOneWidget);
