@@ -1,7 +1,9 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:ukalab_core/ukalab_core.dart';
 
 /// 利用者が入力した受験日の端末内保存。未設定なら null。
+/// 優先順位と保存形式は ukalab_core（[effectiveExamDates] など）。
 class ExamDateStore {
   ExamDateStore(this.appId);
 
@@ -11,8 +13,7 @@ class ExamDateStore {
 
   Future<DateTime?> read() async {
     final prefs = await SharedPreferences.getInstance();
-    final raw = prefs.getString(_key);
-    return raw == null ? null : DateTime.tryParse(raw);
+    return decodeExamDate(prefs.getString(_key));
   }
 
   Future<void> write(DateTime? date) async {
@@ -20,7 +21,7 @@ class ExamDateStore {
     if (date == null) {
       await prefs.remove(_key);
     } else {
-      await prefs.setString(_key, DateTime(date.year, date.month, date.day).toIso8601String());
+      await prefs.setString(_key, encodeExamDate(date));
     }
   }
 }
@@ -44,7 +45,3 @@ class ExamDateNotifier extends Notifier<DateTime?> {
 }
 
 final examDateProvider = NotifierProvider<ExamDateNotifier, DateTime?>(ExamDateNotifier.new);
-
-/// 受験日の候補。利用者入力があればそれだけ、無ければ試験定義の日付。
-List<DateTime> effectiveExamDates(DateTime? userDate, List<DateTime> defined) =>
-    userDate != null ? [userDate] : defined;
