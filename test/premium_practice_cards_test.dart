@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:ukalab_g_kentei/data/exam_date_store.dart';
 import 'package:ukalab_g_kentei/data/history_store.dart';
 import 'package:ukalab_g_kentei/screens/learn_screen.dart';
 import 'package:ukalab_g_kentei/screens/premium_practice_cards.dart';
@@ -100,5 +101,28 @@ void main() {
   testWidgets('試験日の3日前以内なら、試験直前モードを出す', (tester) async {
     await _pump(tester, premium: true, exam: _exam(dates: [DateTime(2026, 11, 22)]));
     expect(find.textContaining('試験直前モード（あと2日）'), findsOneWidget);
+  });
+
+  testWidgets('利用者が入力した受験日が3日前以内なら、定義が空でも試験直前モードを出す', (tester) async {
+    final c = await _pump(tester, premium: true, exam: _exam());
+    await c.read(examDateProvider.notifier).setDate(DateTime(2026, 11, 22));
+    await tester.pump();
+    expect(find.textContaining('試験直前モード（あと2日）'), findsOneWidget);
+  });
+
+  testWidgets('利用者の受験日は、試験定義の日付より優先する', (tester) async {
+    final c = await _pump(tester, premium: true, exam: _exam(dates: [DateTime(2026, 11, 22)]));
+    await c.read(examDateProvider.notifier).setDate(DateTime(2026, 12, 20));
+    await tester.pump();
+    expect(find.textContaining('試験直前モード'), findsNothing);
+  });
+
+  testWidgets('受験日を解除すると保存値も消える', (tester) async {
+    final c = await _pump(tester, premium: true, exam: _exam());
+    await c.read(examDateProvider.notifier).setDate(DateTime(2026, 11, 22));
+    await c.read(examDateProvider.notifier).setDate(null);
+    expect(c.read(examDateProvider), isNull);
+    await c.read(examDateProvider.notifier).load();
+    expect(c.read(examDateProvider), isNull);
   });
 }

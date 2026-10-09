@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'data/exam_date_store.dart';
 import 'data/exam_repository.dart';
 import 'screens/home_screen.dart';
 import 'screens/learn_screen.dart';
@@ -90,9 +91,11 @@ void main() async {
       adGateProvider.overrideWithValue(adGate),
       examStatsServiceProvider.overrideWithValue(examStatsService),
       handsFreeStoreProvider.overrideWithValue(SharedPreferencesHandsFreeStore('g_kentei')),
+      examDateStoreProvider.overrideWithValue(ExamDateStore('g_kentei')),
     ],
   );
   await container.read(handsFreeProvider.notifier).load();
+  await container.read(examDateProvider.notifier).load();
 
   runApp(UncontrolledProviderScope(
     container: container,

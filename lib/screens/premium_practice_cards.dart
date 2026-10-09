@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ukalab_core/ukalab_core.dart';
 
+import '../data/exam_date_store.dart';
 import '../data/history_store.dart';
 import 'learn_screen.dart';
 
@@ -77,7 +78,7 @@ class PremiumPracticeCards extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     // タップ時に読むだけだと未購読で読み込み中のまま「無料」と判定されるため、ここで購読しておく。
     ref.watch(entitlementStateProvider);
-    final eve = examEveStatus(exam.examDates, clock());
+    final eve = examEveStatus(effectiveExamDates(ref.watch(examDateProvider), exam.examDates), clock());
     return Column(
       children: [
         Card(

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ukalab_core/ukalab_core.dart';
 
+import '../data/exam_date_store.dart';
 import '../widgets/oshi_card.dart';
 import 'ai_project_screen.dart';
 import 'attention_viz_screen.dart';
@@ -63,6 +64,7 @@ class HomeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final userDate = ref.watch(examDateProvider);
     final theme = Theme.of(context);
     final adGate = ref.watch(adGateProvider);
     return SingleChildScrollView(
@@ -79,7 +81,7 @@ class HomeScreen extends ConsumerWidget {
           const SizedBox(height: 16),
           OshiCard(
             totalQuestions: questions.length,
-            examDate: exam.examDates.isEmpty ? null : exam.examDates.first,
+            examDate: userDate ?? (exam.examDates.isEmpty ? null : exam.examDates.first),
           ),
           if (aiNewsItems.isNotEmpty) ...[
             const SizedBox(height: 16),
