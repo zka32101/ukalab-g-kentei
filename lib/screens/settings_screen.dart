@@ -2,7 +2,7 @@ import 'package:app_common_kit/app_common_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show Clipboard, ClipboardData;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:ukalab_core/ukalab_core.dart' show Question;
+import 'package:ukalab_core/ukalab_core.dart' show Question, historyCsv;
 
 import '../data/history_store.dart';
 import 'exam_date_tile.dart';
