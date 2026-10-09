@@ -10,6 +10,7 @@ import 'test_support.dart';
 // アニメーションが回り続けて pumpAndSettle がタイムアウトする。
 Future<Widget> _app() async => ProviderScope(
       overrides: [
+        handsFreeStoreProvider.overrideWithValue(InMemoryHandsFreeStore()),
         coinServiceProvider.overrideWithValue(CoinService(store: InMemoryCoinStore())),
         outfitServiceProvider.overrideWithValue(OutfitService(store: InMemoryOutfitStore())),
         entitlementServiceProvider.overrideWithValue(FakeEntitlementService(

@@ -89,8 +89,10 @@ void main() async {
       entitlementServiceProvider.overrideWithValue(entitlementService),
       adGateProvider.overrideWithValue(adGate),
       examStatsServiceProvider.overrideWithValue(examStatsService),
+      handsFreeStoreProvider.overrideWithValue(SharedPreferencesHandsFreeStore('g_kentei')),
     ],
   );
+  await container.read(handsFreeProvider.notifier).load();
 
   runApp(UncontrolledProviderScope(
     container: container,
@@ -161,7 +163,7 @@ class _RootPage extends ConsumerWidget {
             LearnScreen(questions: questions, terms: data.terms),
             MockExamScreen(exam: data.exam, questions: questions),
             RecordScreen(exam: data.exam, questions: questions),
-            const SettingsScreen(),
+            SettingsScreen(questions: questions),
           ],
         );
       },

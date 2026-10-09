@@ -73,6 +73,7 @@ Question _qb() => const Question(
 
 Widget _learn(List<Question> qs, AdGate adGate, {int? size}) => ProviderScope(
       overrides: [
+        handsFreeStoreProvider.overrideWithValue(InMemoryHandsFreeStore()),
         coinServiceProvider.overrideWithValue(CoinService(store: InMemoryCoinStore())),
         adGateProvider.overrideWithValue(adGate),
       ],
@@ -104,6 +105,7 @@ void main() {
     await coinService.load();
     await tester.pumpWidget(ProviderScope(
       overrides: [
+        handsFreeStoreProvider.overrideWithValue(InMemoryHandsFreeStore()),
         coinServiceProvider.overrideWithValue(coinService),
         adGateProvider.overrideWithValue(await testAdGate()),
       ],
@@ -130,6 +132,7 @@ void main() {
     await coinService.load();
     var now = DateTime(2026, 10, 1);
     final container = ProviderContainer(overrides: [
+        handsFreeStoreProvider.overrideWithValue(InMemoryHandsFreeStore()),
       coinServiceProvider.overrideWithValue(coinService),
       progressClockProvider.overrideWithValue(() => now),
       adGateProvider.overrideWithValue(await testAdGate()),
@@ -171,6 +174,7 @@ void main() {
   testWidgets('問題文・解説文中の用語をタップすると用語カードが開く', (tester) async {
     await tester.pumpWidget(ProviderScope(
       overrides: [
+        handsFreeStoreProvider.overrideWithValue(InMemoryHandsFreeStore()),
         coinServiceProvider.overrideWithValue(CoinService(store: InMemoryCoinStore())),
         adGateProvider.overrideWithValue(await testAdGate()),
       ],

@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:yourwish_kentei/yourwish_kentei.dart';
 
+import '../data/history_store.dart';
 import '../data/progress_store.dart';
+import '../widgets/hands_free_choice_body.dart';
 
 /// 「学ぶ」タブ: 短い演習セッション（最小実装。間隔反復・弱点優先は後続）。
 class LearnScreen extends ConsumerStatefulWidget {
@@ -26,6 +28,9 @@ class _LearnScreenState extends ConsumerState<LearnScreen> {
   late PracticeSession _session = _newSession();
   int? _selected;
   bool _answered = false;
+
+  /// 出題を表示した時刻（回答にかかった時間の計測用）。
+  DateTime _shownAt = DateTime.now();
 
   /// 回答済みの間に画面へ出す問題。
   ///
@@ -57,6 +62,7 @@ class _LearnScreenState extends ConsumerState<LearnScreen> {
       _answered = false;
       _answeredQuestion = null;
       _choiceOrder.clear();
+      _shownAt = DateTime.now();
     });
   }
 
@@ -72,6 +78,11 @@ class _LearnScreenState extends ConsumerState<LearnScreen> {
     _session.answer(i);
     final correct = i == q.answerIndex;
     await ref.read(progressProvider.notifier).recordAnswer(q.qid, correct: correct);
+    await ref.read(historyProvider.notifier).record(
+          q,
+          correct: correct,
+          ms: DateTime.now().difference(_shownAt).inMilliseconds,
+        );
     await ref.read(coinProvider.notifier).grant(CoinEvent.newQuestion(q.qid));
     final streakDays = ref.read(progressProvider).streakDays;
     if (streakCoinMilestones.contains(streakDays)) {
@@ -84,6 +95,7 @@ class _LearnScreenState extends ConsumerState<LearnScreen> {
       _selected = null;
       _answered = false;
       _answeredQuestion = null;
+      _shownAt = DateTime.now();
     });
     if (_session.current == null) {
       await ref.read(adGateProvider).maybeShowInterstitial(InterstitialTrigger.sessionEnd);
@@ -173,6 +185,18 @@ class _LearnScreenState extends ConsumerState<LearnScreen> {
             ],
           ),
         ),
+      );
+    }
+
+    if (ref.watch(handsFreeProvider).enabled && !_answered) {
+      final order = _orderFor(q);
+      return HandsFreeChoiceBody(
+        qid: q.qid,
+        prompt: q.prompt,
+        choices: [for (final i in order) q.choices[i]],
+        index: _session.index + 1,
+        total: _session.questions.length,
+        onSelect: (pos) => _select(order[pos]),
       );
     }
 

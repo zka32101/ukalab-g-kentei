@@ -26,7 +26,10 @@ FakeEntitlementService _service() => FakeEntitlementService(
     );
 
 Widget _app(FakeEntitlementService service) => ProviderScope(
-      overrides: [entitlementServiceProvider.overrideWithValue(service)],
+      overrides: [
+        entitlementServiceProvider.overrideWithValue(service),
+        handsFreeStoreProvider.overrideWithValue(InMemoryHandsFreeStore()),
+      ],
       child: const MaterialApp(home: Scaffold(body: SettingsScreen())),
     );
 
