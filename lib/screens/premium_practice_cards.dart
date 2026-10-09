@@ -75,6 +75,8 @@ class PremiumPracticeCards extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // タップ時に読むだけだと未購読で読み込み中のまま「無料」と判定されるため、ここで購読しておく。
+    ref.watch(entitlementStateProvider);
     final eve = examEveStatus(exam.examDates, clock());
     return Column(
       children: [
