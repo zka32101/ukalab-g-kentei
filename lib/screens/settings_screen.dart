@@ -4,7 +4,6 @@ import 'package:flutter/services.dart' show Clipboard, ClipboardData;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ukalab_core/ukalab_core.dart' show Question;
 
-import '../data/exam_date_store.dart';
 import '../data/history_store.dart';
 import 'exam_date_tile.dart';
 
