@@ -1,6 +1,6 @@
 import 'package:app_common_kit/app_common_kit.dart';
 import 'package:flutter/material.dart';
-import 'package:yourwish_kentei/yourwish_kentei.dart';
+import 'package:ukalab_core/ukalab_core.dart';
 
 /// 「評価指標ラボ」一覧（画期的な機能3）。混同行列を動かして正解率・適合率・
 /// 再現率・F値の連動を体験し、場面問題を解く。

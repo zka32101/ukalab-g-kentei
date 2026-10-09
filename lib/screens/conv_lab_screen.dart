@@ -1,6 +1,6 @@
 import 'package:app_common_kit/app_common_kit.dart';
 import 'package:flutter/material.dart';
-import 'package:yourwish_kentei/yourwish_kentei.dart';
+import 'package:ukalab_core/ukalab_core.dart';
 
 /// 「画像認識の中身を見る」一覧（画期的な機能4）。畳み込みフィルタを当てて
 /// 特徴マップの変化を見る。

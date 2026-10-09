@@ -6,7 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ukalab_g_kentei/data/history_store.dart';
 import 'package:ukalab_g_kentei/screens/learn_screen.dart';
 import 'package:ukalab_g_kentei/screens/premium_practice_cards.dart';
-import 'package:yourwish_kentei/yourwish_kentei.dart';
+import 'package:ukalab_core/ukalab_core.dart';
 
 import 'test_support.dart';
 

@@ -1,6 +1,6 @@
 import 'package:app_common_kit/app_common_kit.dart';
 import 'package:flutter/material.dart';
-import 'package:yourwish_kentei/yourwish_kentei.dart';
+import 'package:ukalab_core/ukalab_core.dart';
 
 /// 「AIプロジェクト経営モード」一覧（画期的な機能8、ストーリー型）。架空の
 /// 会社でAI導入を進め、各段階で判断する。UIはストーリー型の共通エンジン

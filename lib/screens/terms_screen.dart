@@ -1,6 +1,6 @@
 import 'package:app_common_kit/app_common_kit.dart';
 import 'package:flutter/material.dart';
-import 'package:yourwish_kentei/yourwish_kentei.dart';
+import 'package:ukalab_core/ukalab_core.dart';
 
 /// 「用語集」画面（決定50）。五十音・分野を問わない一覧と検索。
 /// タップで用語カードをボトムシートで開き、関連用語のタップで次の用語に移動する。

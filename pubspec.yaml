@@ -16,10 +16,10 @@ dependencies:
     git:
       url: https://github.com/zka32101/app_common_kit.git
       ref: v0.21.0 # 引継ぎ・ながら学習・推しカード
-  yourwish_kentei:
+  ukalab_core:
     git:
       url: https://github.com/zka32101/yourwish_kentei.git
-      ref: v0.21.0 # 弱点ドリル・試験直前・10分プラン・履歴CSV
+      ref: v0.22.0 # パッケージ名の改名(yourwish_kentei→ukalab_core)
 
   # 状態管理
   flutter_riverpod: ">=2.5.1 <3.0.0"

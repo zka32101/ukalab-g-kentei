@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:app_common_kit/app_common_kit.dart' show TermReference;
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:yourwish_kentei/yourwish_kentei.dart';
+import 'package:ukalab_core/ukalab_core.dart';
 
 /// G検定の試験定義・問題データ・用語データを assets から読み込む。
 class ExamData {

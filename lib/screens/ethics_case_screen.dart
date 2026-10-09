@@ -1,6 +1,6 @@
 import 'package:app_common_kit/app_common_kit.dart';
 import 'package:flutter/material.dart';
-import 'package:yourwish_kentei/yourwish_kentei.dart';
+import 'package:ukalab_core/ukalab_core.dart';
 
 /// 「AI倫理ケース」一覧（画期的な機能7）。架空のケースに対して公平性・
 /// プライバシー・説明責任・著作権などの観点から適切な判断を選ぶ。UIは

@@ -1,6 +1,6 @@
 import 'package:app_common_kit/app_common_kit.dart';
 import 'package:flutter/material.dart';
-import 'package:yourwish_kentei/yourwish_kentei.dart';
+import 'package:ukalab_core/ukalab_core.dart';
 
 /// 「手法の選び方」一覧（事例仕分け、画期的な機能6）。事例に対して適切な
 /// 手法・モデル・評価指標を選ぶ。

@@ -1,6 +1,6 @@
 import 'package:app_common_kit/app_common_kit.dart';
 import 'package:flutter/material.dart';
-import 'package:yourwish_kentei/yourwish_kentei.dart';
+import 'package:ukalab_core/ukalab_core.dart';
 
 /// 「ニューラルネット組み立て」一覧（画期的な機能2）。隠れ層・ユニット数・
 /// 活性化関数・学習率を選び、小さな全結合ニューラルネットを実際に学習させて

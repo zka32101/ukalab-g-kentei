@@ -1,6 +1,6 @@
 import 'package:app_common_kit/app_common_kit.dart';
 import 'package:flutter/material.dart';
-import 'package:yourwish_kentei/yourwish_kentei.dart';
+import 'package:ukalab_core/ukalab_core.dart';
 
 /// 「機械学習ラボ」一覧（画期的な機能1）。点を置いてk近傍法・決定木・線形
 /// 分類の境界を見る。

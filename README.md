@@ -44,7 +44,7 @@ flutter test
 問題・用語データの検証（配信前・CI）:
 
 ```bash
-dart run yourwish_kentei:validate_content assets/exam/g_kentei.json --terms assets/terms/g_kentei.jsonl --boundary assets/experience/g_kentei.jsonl --predict assets/experience/predict_g_kentei.jsonl --misconception assets/experience/teach_mascot_g_kentei.jsonl assets/questions/g_kentei.jsonl
+dart run ukalab_core:validate_content assets/exam/g_kentei.json --terms assets/terms/g_kentei.jsonl --boundary assets/experience/g_kentei.jsonl --predict assets/experience/predict_g_kentei.jsonl --misconception assets/experience/teach_mascot_g_kentei.jsonl assets/questions/g_kentei.jsonl
 ```
 
 ## 現状・未完了（2026-10-03 時点）

@@ -1,6 +1,6 @@
 import 'package:app_common_kit/app_common_kit.dart';
 import 'package:flutter/material.dart';
-import 'package:yourwish_kentei/yourwish_kentei.dart';
+import 'package:ukalab_core/ukalab_core.dart';
 
 /// 「学習の失敗図鑑」一覧（型⑦、決定76）。学習曲線を見て症状を当て、
 /// 処方（対策）を選ぶ。
