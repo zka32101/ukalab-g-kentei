@@ -1,4 +1,4 @@
-import 'package:yourwish_kentei/yourwish_kentei.dart';
+import 'package:ukalab_core/ukalab_core.dart';
 
 /// 進捗（qidごとの最新正誤）と問題データから、最短ルートプランナー（型④）に
 /// 渡す科目別の正答率を計算する。

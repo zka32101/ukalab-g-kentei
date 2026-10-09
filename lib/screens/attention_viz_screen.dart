@@ -1,6 +1,6 @@
 import 'package:app_common_kit/app_common_kit.dart';
 import 'package:flutter/material.dart';
-import 'package:yourwish_kentei/yourwish_kentei.dart';
+import 'package:ukalab_core/ukalab_core.dart';
 
 /// 「Transformerの注意の可視化」一覧（画期的な機能5）。単語同士の注意
 /// （Attention）の強さを線の太さ・濃さで見る。

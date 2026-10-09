@@ -4,7 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ukalab_g_kentei/data/progress_store.dart';
 import 'package:ukalab_g_kentei/screens/record_screen.dart';
-import 'package:yourwish_kentei/yourwish_kentei.dart';
+import 'package:ukalab_core/ukalab_core.dart';
 
 Question _q(String qid, String subjectId) => Question(
       qid: qid,

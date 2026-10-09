@@ -1,6 +1,6 @@
 import 'package:app_common_kit/app_common_kit.dart';
 import 'package:flutter/material.dart';
-import 'package:yourwish_kentei/yourwish_kentei.dart';
+import 'package:ukalab_core/ukalab_core.dart';
 
 /// 「予測→実行」一覧（型②、決定76）。先に答えを予測してから、計算結果との
 /// ズレを見て学ぶ。

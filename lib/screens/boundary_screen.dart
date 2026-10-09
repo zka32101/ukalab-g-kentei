@@ -1,6 +1,6 @@
 import 'package:app_common_kit/app_common_kit.dart';
 import 'package:flutter/material.dart';
-import 'package:yourwish_kentei/yourwish_kentei.dart';
+import 'package:ukalab_core/ukalab_core.dart';
 
 /// 「境界線スライダー」一覧（型①、決定76・77）。条件を1つずつ切り替え、
 /// 判定が切り替わる「ちょうど境目」を体験する。

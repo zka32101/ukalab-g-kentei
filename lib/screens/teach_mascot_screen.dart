@@ -1,6 +1,6 @@
 import 'package:app_common_kit/app_common_kit.dart';
 import 'package:flutter/material.dart';
-import 'package:yourwish_kentei/yourwish_kentei.dart';
+import 'package:ukalab_core/ukalab_core.dart';
 
 /// 「推しの答案を添削」一覧（型③、決定76・77）。推しが出す誤った答案の
 /// 誤りをタップして直す。推しの成長(Lv)はこの演出とは独立している。
