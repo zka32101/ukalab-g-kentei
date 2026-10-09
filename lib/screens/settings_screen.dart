@@ -4,8 +4,8 @@ import 'package:flutter/services.dart' show Clipboard, ClipboardData;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ukalab_core/ukalab_core.dart' show Question, historyCsv;
 
+import '../data/exam_date_store.dart';
 import '../data/history_store.dart';
-import 'exam_date_tile.dart';
 
 /// 「設定」タブ。課金（決定35）の購入・復元を提供する。広告はnoads/premiumの
 /// どちらかを持つと自動的に非表示になる（`AdGate.adsHidden`）。
@@ -50,7 +50,10 @@ class SettingsScreen extends ConsumerWidget {
             value: handsFree.speakQuestion,
             onChanged: (v) => ref.read(handsFreeProvider.notifier).setSpeakQuestion(v),
           ),
-        const ExamDateTile(),
+        ExamDateTile(
+          date: ref.watch(examDateProvider),
+          onChanged: (d) => ref.read(examDateProvider.notifier).setDate(d),
+        ),
         ListTile(
           title: const Text('学習履歴をコピー（CSV）'),
           subtitle: const Text('日ごと・分野ごとの解答数と正答率。個人情報は含みません。'),
