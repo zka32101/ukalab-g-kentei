@@ -15,6 +15,7 @@ import 'method_choice_screen.dart';
 import 'ml_lab_screen.dart';
 import 'nn_builder_screen.dart';
 import 'pace_run_screen.dart';
+import 'premium_practice_cards.dart';
 import 'predict_run_screen.dart';
 import 'route_planner_screen.dart';
 import 'teach_mascot_screen.dart';
@@ -115,6 +116,8 @@ class HomeScreen extends ConsumerWidget {
               ),
             ),
           ),
+          const SizedBox(height: 16),
+          PremiumPracticeCards(exam: exam, questions: questions, terms: terms),
           const SizedBox(height: 16),
           Card(
             child: ListTile(
