@@ -22,6 +22,9 @@ function check(name, ok) {
   const page = await browser.newPage({ locale: 'ja-JP', viewport: { width: 420, height: 1000 } });
   const errors = [];
   page.on('pageerror', e => errors.push(String(e)));
+  // 起動しないときの原因を追えるよう、ブラウザのコンソールのエラーも出す。
+  page.on('console', m => { if (m.type() === 'error' || m.type() === 'warning') console.log(`[console.${m.type()}] ${m.text().slice(0, 400)}`); });
+  page.on('requestfailed', r => console.log(`[requestfailed] ${r.url()} ${r.failure()?.errorText}`));
 
   // 文字は innerText と aria-label の両方から拾う（タブやボタンの名前は aria-label にだけ入る）。
   const text = async () =>
@@ -40,7 +43,7 @@ function check(name, ok) {
   const click = async (name) => {
     const byRole = page.getByRole('tab', { name, exact: false });
     const loc = (await byRole.count()) > 0 ? byRole : page.getByRole('button', { name, exact: false });
-    await loc.first().click({ force: true });
+    await loc.first().click({ force: true, timeout: 5000 });
     await page.waitForTimeout(700);
   };
   const boot = async () => {
@@ -51,7 +54,14 @@ function check(name, ok) {
   };
 
   await boot();
-  check('起動してホームが出る', await waitText('ホーム', 20000));
+  const booted = await waitText('ホーム', 20000);
+  check('起動してホームが出る', booted);
+  if (!booted) {
+    console.log(`--- 起動後の画面の文字 ---\n${(await text()).slice(0, 800)}\n--- ページエラー ---\n${errors.join('\n')}`);
+    await page.screenshot({ path: `${shots}/boot-failed.png` });
+    await browser.close();
+    process.exit(1);
+  }
   await page.screenshot({ path: `${shots}/home.png` });
 
   // 5つのタブを順に開く
