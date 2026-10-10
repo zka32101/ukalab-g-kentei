@@ -16,7 +16,11 @@ import 'screens/settings_screen.dart';
 import 'services/no_ads_backend.dart';
 
 /// Google公式のテスト広告ユニットID。本番公開前に実際のIDへ差し替える（決定35）。
-AdUnitIds _testAdUnitIds() => !kIsWeb && Platform.isIOS
+AdUnitIds _testAdUnitIds() => kIsWeb
+    // Web には広告SDKが無く、広告は出さない（NoAdsBackend）。リリースビルドでテストIDを
+    // 使うと AdGate が例外にするため、Web では空のIDにする。
+    ? const AdUnitIds(banner: '', interstitial: '', rewarded: '')
+    : Platform.isIOS
     ? const AdUnitIds(
         banner: 'ca-app-pub-3940256099942544/2934735716',
         interstitial: 'ca-app-pub-3940256099942544/4411468910',
