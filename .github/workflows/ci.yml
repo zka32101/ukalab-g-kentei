@@ -36,7 +36,7 @@ jobs:
       - name: Build (web)
         run: |
           flutter pub get
-          flutter build web
+          flutter build web --dart2js-optimization=O0
       - name: Install Playwright
         working-directory: e2e
         run: |

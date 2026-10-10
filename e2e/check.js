@@ -21,7 +21,7 @@ function check(name, ok) {
   const browser = await chromium.launch({ executablePath: process.env.CHROMIUM_PATH || undefined, args: ['--no-sandbox'] });
   const page = await browser.newPage({ locale: 'ja-JP', viewport: { width: 420, height: 1000 } });
   const errors = [];
-  page.on('pageerror', e => errors.push(String(e)));
+  page.on('pageerror', e => errors.push(e.stack || e.message || String(e)));
   // 起動しないときの原因を追えるよう、ブラウザのコンソールのエラーも出す。
   page.on('console', m => { if (m.type() === 'error' || m.type() === 'warning') console.log(`[console.${m.type()}] ${m.text().slice(0, 400)}`); });
   page.on('requestfailed', r => console.log(`[requestfailed] ${r.url()} ${r.failure()?.errorText}`));
