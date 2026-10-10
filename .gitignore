@@ -43,3 +43,5 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+e2e/node_modules/
+e2e/shots/

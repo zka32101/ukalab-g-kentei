@@ -14,9 +14,14 @@ import 'screens/learn_screen.dart';
 import 'screens/mock_exam_screen.dart';
 import 'screens/record_screen.dart';
 import 'screens/settings_screen.dart';
+import 'services/no_ads_backend.dart';
 
 /// Google公式のテスト広告ユニットID。本番公開前に実際のIDへ差し替える（決定35）。
-AdUnitIds _testAdUnitIds() => Platform.isIOS
+AdUnitIds _testAdUnitIds() => kIsWeb
+    // Web には広告SDKが無く、広告は出さない（NoAdsBackend）。リリースビルドでテストIDを
+    // 使うと AdGate が例外にするため、Web では空のIDにする。
+    ? const AdUnitIds(banner: '', interstitial: '', rewarded: '')
+    : Platform.isIOS
     ? const AdUnitIds(
         banner: 'ca-app-pub-3940256099942544/2934735716',
         interstitial: 'ca-app-pub-3940256099942544/4411468910',
@@ -76,6 +81,8 @@ void main() async {
   // 広告（AdMob、決定35）。noads/premiumの間は何も表示しない。
   final adGate = await AdGate.init(
     config: AdConfig(unitIds: _testAdUnitIds()),
+    // Web には広告SDK（google_mobile_ads）が無いため、広告を出さない実装にする。
+    backend: kIsWeb ? NoAdsBackend() : null,
     adsHidden: () => entitlementService.state.adsHidden,
     isRelease: kReleaseMode,
   );
