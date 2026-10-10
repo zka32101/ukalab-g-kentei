@@ -13,11 +13,11 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: "v0.14.0"
-      resolved-ref: "9d228fd5e230ef89293ca673783fafad7f50a4fd"
+      ref: "v1.0.0"
+      resolved-ref: "86f3248b597e0dfa897fab513cde860e9904f980"
       url: "https://github.com/zka32101/app_common_kit.git"
     source: git
-    version: "0.14.0"
+    version: "1.0.0"
   archive:
     dependency: transitive
     description:
@@ -220,6 +220,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_tts:
+    dependency: "direct main"
+    description:
+      name: flutter_tts
+      sha256: ce5eb209b40e95f2f4a1397116c87ab2fcdff32257d04ed7a764e75894c03775
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.2.5"
   flutter_web_plugins:
     dependency: transitive
     description: flutter
@@ -502,6 +510,15 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.4.0"
+  ukalab_core:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: "v0.24.0"
+      resolved-ref: "03f9946716b71fd1bcaa5aed1988f5030206f286"
+      url: "https://github.com/zka32101/ukalab_core.git"
+    source: git
+    version: "0.24.0"
   uuid:
     dependency: transitive
     description:
@@ -582,15 +599,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.1.4"
-  yourwish_kentei:
-    dependency: "direct main"
-    description:
-      path: "."
-      ref: "25f090a2d9be66891047ee245539e9ce03a690d1"
-      resolved-ref: "25f090a2d9be66891047ee245539e9ce03a690d1"
-      url: "https://github.com/zka32101/ukalab_core.git"
-    source: git
-    version: "0.10.0"
 sdks:
   dart: ">=3.11.0-0 <4.0.0"
   flutter: ">=3.35.1"
