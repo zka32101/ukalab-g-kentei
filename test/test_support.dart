@@ -1,6 +1,8 @@
 import 'package:app_common_kit/app_common_kit.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:ukalab_core/ui.dart';
 
 /// テスト用の広告バックエンド。何も表示せず、常に準備済みとして振る舞う。
 class FakeAdsBackend implements AdsBackend {
@@ -34,3 +36,14 @@ Future<AdGate> testAdGate() async {
     backend: FakeAdsBackend(),
   );
 }
+
+/// しおり・タグ・メモのサービス（端末内保存。読み込み前は空）を差し込むための override。
+/// 演習の画面（`LearnScreen`）がしおりボタンとメモ欄を出すので、画面を組むテストに入れる。
+List<Override> studyNotesOverrides() => [
+      bookmarkServiceProvider.overrideWithValue(
+          BookmarkService(store: SharedPreferencesBookmarkStore('test'))),
+      bookmarkTagServiceProvider.overrideWithValue(
+          BookmarkTagService(store: SharedPreferencesBookmarkTagStore('test'))),
+      questionMemoServiceProvider.overrideWithValue(
+          QuestionMemoService(store: SharedPreferencesQuestionMemoStore('test'))),
+    ];

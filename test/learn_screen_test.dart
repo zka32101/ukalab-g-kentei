@@ -75,6 +75,7 @@ Question _qb() => const Question(
 Widget _learn(List<Question> qs, AdGate adGate, {int? size}) => ProviderScope(
       overrides: [
         handsFreeStoreProvider.overrideWithValue(InMemoryHandsFreeStore()),
+        ...studyNotesOverrides(),
         coinServiceProvider.overrideWithValue(CoinService(store: InMemoryCoinStore())),
         adGateProvider.overrideWithValue(adGate),
       ],
@@ -107,6 +108,7 @@ void main() {
     await tester.pumpWidget(ProviderScope(
       overrides: [
         handsFreeStoreProvider.overrideWithValue(InMemoryHandsFreeStore()),
+        ...studyNotesOverrides(),
         coinServiceProvider.overrideWithValue(coinService),
         adGateProvider.overrideWithValue(await testAdGate()),
       ],
@@ -134,6 +136,7 @@ void main() {
     var now = DateTime(2026, 10, 1);
     final container = ProviderContainer(overrides: [
         handsFreeStoreProvider.overrideWithValue(InMemoryHandsFreeStore()),
+        ...studyNotesOverrides(),
       coinServiceProvider.overrideWithValue(coinService),
       progressClockProvider.overrideWithValue(() => now),
       adGateProvider.overrideWithValue(await testAdGate()),
@@ -176,6 +179,7 @@ void main() {
     await tester.pumpWidget(ProviderScope(
       overrides: [
         handsFreeStoreProvider.overrideWithValue(InMemoryHandsFreeStore()),
+        ...studyNotesOverrides(),
         coinServiceProvider.overrideWithValue(CoinService(store: InMemoryCoinStore())),
         adGateProvider.overrideWithValue(await testAdGate()),
       ],
@@ -279,6 +283,8 @@ void main() {
       final other = first == 'A' ? 'B' : 'A';
       await tester.tap(find.text('$firstの正解'));
       await tester.pumpAndSettle();
+      // 解説の下にメモ欄が入って縦に長くなったので、ボタンを画面内へ寄せてから押す。
+      await tester.ensureVisible(find.text('次へ'));
       await tester.tap(find.text('次へ'));
       await tester.pumpAndSettle();
 
@@ -297,6 +303,8 @@ void main() {
       expect(find.text('解説Aの本文'), findsOneWidget);
       expect(find.byType(ResultSummary), findsNothing);
 
+      // 解説の下にメモ欄が入って縦に長くなったので、ボタンを画面内へ寄せてから押す。
+      await tester.ensureVisible(find.text('次へ'));
       await tester.tap(find.text('次へ'));
       await tester.pumpAndSettle();
       expect(find.byType(ResultSummary), findsOneWidget);
