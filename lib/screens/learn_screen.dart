@@ -1,4 +1,5 @@
 import 'package:app_common_kit/app_common_kit.dart';
+import 'package:app_common_kit/hands_free_tts.dart';
 import 'package:ukalab_core/ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -6,7 +7,6 @@ import 'package:ukalab_core/ukalab_core.dart';
 
 import '../data/history_store.dart';
 import '../data/progress_store.dart';
-import '../widgets/hands_free_choice_body.dart';
 
 /// 「学ぶ」タブ: 短い演習セッション（最小実装。間隔反復・弱点優先は後続）。
 class LearnScreen extends ConsumerStatefulWidget {
