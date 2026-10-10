@@ -206,6 +206,10 @@ class _LearnScreenState extends ConsumerState<LearnScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
+          Align(
+            alignment: Alignment.centerRight,
+            child: BookmarkToggleButton(qid: q.qid),
+          ),
           QuestionCard(
             text: q.prompt,
             textWidget: TappableTermText(
@@ -231,6 +235,8 @@ class _LearnScreenState extends ConsumerState<LearnScreen> {
               ),
               sourceRef: q.sourceRef,
             ),
+            const SizedBox(height: 12),
+            QuestionMemoField(key: ValueKey(q.qid), qid: q.qid),
             const SizedBox(height: 16),
             FilledButton(onPressed: _next, child: const Text('次へ')),
           ],

@@ -91,6 +91,14 @@ void main() async {
   // FirebaseExamStatsService へ差し替える（firebase_core の初期化が必要）。
   final examStatsService = FakeExamStatsService();
 
+  // ブックマーク・タグ・問題メモ（端末内に保存）。
+  final bookmarkService = BookmarkService(store: SharedPreferencesBookmarkStore('g_kentei'));
+  await bookmarkService.load();
+  final bookmarkTagService = BookmarkTagService(store: SharedPreferencesBookmarkTagStore('g_kentei'));
+  await bookmarkTagService.load();
+  final questionMemoService = QuestionMemoService(store: SharedPreferencesQuestionMemoStore('g_kentei'));
+  await questionMemoService.load();
+
   final container = ProviderContainer(
     overrides: [
       coinServiceProvider.overrideWithValue(coinService),
@@ -100,6 +108,9 @@ void main() async {
       examStatsServiceProvider.overrideWithValue(examStatsService),
       handsFreeStoreProvider.overrideWithValue(SharedPreferencesHandsFreeStore('g_kentei')),
       examDateStoreProvider.overrideWithValue(ExamDateStore('g_kentei')),
+      bookmarkServiceProvider.overrideWithValue(bookmarkService),
+      bookmarkTagServiceProvider.overrideWithValue(bookmarkTagService),
+      questionMemoServiceProvider.overrideWithValue(questionMemoService),
     ],
   );
   await container.read(handsFreeProvider.notifier).load();

@@ -63,6 +63,12 @@ class HomeScreen extends ConsumerWidget {
   final List<EthicsCaseScenario> ethicsCaseScenarios;
   final List<StoryScenario> storyScenarios;
 
+  /// 一覧から開く問題の詳細。選択肢の記号は演習（A・B・C…）に合わせる。
+  Widget _detailBuilder(BuildContext context, Question q) => QuestionDetailScreen(
+        question: q,
+        choiceLabels: const ['A', 'B', 'C', 'D', 'E', 'F'],
+      );
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final userDate = ref.watch(examDateProvider);
@@ -121,6 +127,40 @@ class HomeScreen extends ConsumerWidget {
           ),
           const SizedBox(height: 16),
           PremiumPracticeCards(exam: exam, questions: questions, terms: terms),
+          const SizedBox(height: 16),
+          Card(
+            child: ListTile(
+              leading: const Icon(Icons.bookmark_border),
+              title: const Text('ブックマーク'),
+              subtitle: const Text('しおりを付けた問題を見返せます。タグでも整理できます。'),
+              trailing: const Icon(Icons.chevron_right),
+              onTap: () => Navigator.of(context).push(
+                MaterialPageRoute<void>(
+                  builder: (context) => BookmarkedQuestionsScreen(
+                    loadQuestions: () async => questions,
+                    detailBuilder: _detailBuilder,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(height: 16),
+          Card(
+            child: ListTile(
+              leading: const Icon(Icons.sticky_note_2_outlined),
+              title: const Text('自分用メモ'),
+              subtitle: const Text('解説の下に書き残したメモの一覧です。'),
+              trailing: const Icon(Icons.chevron_right),
+              onTap: () => Navigator.of(context).push(
+                MaterialPageRoute<void>(
+                  builder: (context) => MemoListScreen(
+                    loadQuestions: () async => questions,
+                    detailBuilder: _detailBuilder,
+                  ),
+                ),
+              ),
+            ),
+          ),
           const SizedBox(height: 16),
           Card(
             child: ListTile(
